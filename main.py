@@ -124,7 +124,7 @@ def writedb():
     'hello': 'World',
     'lasttime': datetime.datetime.now()
   })
-  #mail.send_example()
+  mail.send_example()
   return render_template('./img.html')
 
 
