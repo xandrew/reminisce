@@ -4,3 +4,4 @@ flask-login==0.4.1
 flask-dance==3.0.0
 blinker==1.4
 firebase-admin==3.2.1
+sendgrid==6.1.0
