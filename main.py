@@ -10,6 +10,9 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import datetime
 
+from my_pretty_form import MyPrettyForm
+import mail
+
 # Use the application default credentials
 cred = credentials.ApplicationDefault()
 firebase_admin.initialize_app(cred, {
@@ -20,7 +23,6 @@ db = firestore.client()
 
 
 
-from my_pretty_form import MyPrettyForm
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
@@ -122,6 +124,7 @@ def writedb():
     'hello': 'World',
     'lasttime': datetime.datetime.now()
   })
+  mail.send_example()
   return render_template('./img.html')
 
 
@@ -140,7 +143,12 @@ def hello(slug):
 def pretty_form():
     form = MyPrettyForm(request.form)
     form.validate()
-    return render_template('./my_pretty_form.html', form=form, blu=form.name.data)
+    image_file = request.files.get(form.img.name)
+    img = []
+    if image_file is not None:
+        img = image_file.read()
+        mail.send(form.name.data, img)
+    return render_template('./my_pretty_form.html', form=form, blu=len(img))
 
 
 
