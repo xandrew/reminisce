@@ -143,7 +143,12 @@ def hello(slug):
 def pretty_form():
     form = MyPrettyForm(request.form)
     form.validate()
-    return render_template('./my_pretty_form.html', form=form, blu=form.name.data)
+    image_file = request.files.get(form.img.name)
+    img = []
+    if image_file is not None:
+        img = image_file.read()
+        mail.send(form.name.data, img)
+    return render_template('./my_pretty_form.html', form=form, blu=len(img))
 
 
 
