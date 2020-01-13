@@ -1,4 +1,16 @@
+<!DOCTYPE html>
 <html>
-  <h1>Welcome {{slug}}</h1>
-  <p>Alma is {{alma}}!
+<head>
+<meta charset="UTF-8">
+<title>A nice apple and YOU</title>
+</head>
+<body>
+  <h1>Welcome {{email}}</h1>
+  <h2>This is YOU!</h2>
+  <img src="{{picture}}" />
+  <h2>... and this is an apple</h2>
+  <img src="{{ url_for('static', filename='apple.jpg') }}" />
+  <h2>Both are SOOO pretty!</h2>
+</body>
 </html>
+
