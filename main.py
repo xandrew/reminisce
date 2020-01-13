@@ -5,7 +5,20 @@ import logging
 import sys
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import oauth_authorized
-#import requests_toolbelt.adapters.appengine
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+import datetime
+
+# Use the application default credentials
+cred = credentials.ApplicationDefault()
+firebase_admin.initialize_app(cred, {
+  'projectId': 'electrocuted-snail',
+})
+
+db = firestore.client()
+
+
 
 from my_pretty_form import MyPrettyForm
 
@@ -26,11 +39,9 @@ login_manager.init_app(app)
 #login_manager.anonymous_user = "BELA" # accountmodels.AnonymousUser
 login_manager.login_view = 'login'
 
-my_users = {}
-
 @login_manager.user_loader
 def load_user(user_id):
-    return my_users.get(user_id, SnailUser({'email': user_id}))
+    return user_from_db(db, user_id)
 
 google_blueprint = make_google_blueprint(
     client_id='387666456097-gpv671f9feq2s66ul0goi4c51913uqj7.apps.googleusercontent.com',
@@ -42,9 +53,24 @@ google_blueprint = make_google_blueprint(
 )
 app.register_blueprint(google_blueprint, url_prefix='/auth')
 
+def user_db_ref(db, email):
+    return db.collection('users').document(email)
+        
+def user_from_db(db, email):
+    doc = user_db_ref(db, email).get()
+    as_dict = doc.to_dict()
+    picture = ''
+    if as_dict is not None:
+        picture = as_dict.get('picture', '')
+    return SnailUser(email, picture)
+
 class SnailUser:
-    def __init__(self, json):
-        self.json = json
+    def __init__(self, email, picture):
+        self.email = email
+        self.picture = picture
+
+    def save_to_db(self, db):
+        user_db_ref(db, self.email).set({'picture': self.picture})
     
     @property
     def is_active(self):
@@ -57,15 +83,16 @@ class SnailUser:
         return False
 
     def get_id(self):
-        return self.json['email']
+        return self.email
 
     def __str__(self):
-        return str(self.json)
+        return f'User with email {self.email}'
 
 @oauth_authorized.connect
 def _on_signin(blueprint, token):
-    us = SnailUser(google.get('oauth2/v1/userinfo').json())
-    my_users[us.get_id()] = us
+    user_json = google.get('oauth2/v1/userinfo').json()
+    us = SnailUser(user_json['email'], user_json.get('picture', ''))
+    us.save_to_db(db)
     login_user(us)
     
 @app.route('/login')
@@ -85,8 +112,18 @@ def root():
     alma += 1
     return render_template(
             './alma.html',
-            slug=current_user,
-            alma=alma)
+            email=current_user.email,
+            picture=current_user.picture)
+
+@app.route('/writedb')
+def writedb():
+  doc_ref = db.collection('requests').document('theonlyone')
+  doc_ref.set({
+    'hello': 'World',
+    'lasttime': datetime.datetime.now()
+  })
+  return render_template('./img.html')
+
 
 @app.route('/bla/<slug>')
 def hello(slug):
