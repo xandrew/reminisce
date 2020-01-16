@@ -1,36 +1,3 @@
-{% macro field_label(field, label=''): %}
-
-    {% set text = label or field.label.text %}
-    {% if field.flags.required %}
-            {{ field.label(text=text + " *", class="klavikab") }}
-    {% else %}
-            {{ field.label(text=text + " ", class="klavikab") }}
-    {% endif %}
-
-{% endmacro %}
-
-{% macro field_field(field) %}
-    {{ field(**kwargs) }}
-    {% if field.errors %}
-        {% for error in field.errors %}<label for="{{ field.id }}" class="error help-inline">{{ error }}</label>{% endfor %}
-    {% endif %}
-{% endmacro %}
-
-<!-- Renders a form field with errors, required flags, and common styling.
-	html element fields such as class, style, or type can be passed as kwargs.
-	Usage: macros.field(form.username, class="input-xlarge", type="email") -->
-{% macro field(field, label='') -%}
-    <div class="{% if field.errors %} danger{% endif %} formsection">
-        {% if caller: %}
-            {{ caller() }}
-        {% else: %}
-            {{ field_label(field, label) }}
-            <div class="">{{ field_field(field, **kwargs) }}</div>
-        {% endif %}
-    </div>
-{%- endmacro %}
-
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -53,15 +20,11 @@
 	  $('input[type=file]').change(function() {
 	      $('.fakefn').val($(this).val());
 	  });
-	  //mdc.ripple.MDCRipple.attachTo(document.querySelector('.foo-button'));
-	  //const checkbox = new mdc.checkbox.MDCCheckbox(document.querySelector('.mdc-checkbox'));
-	  //const formField = new mdc.formField.MDCFormField(document.querySelector('.mdc-form-field'));
-	  //formField.input = checkbox;
       });
     </script>
   </head>
   <body>
-    <h2 class="mdc-typography--headline5">Let's send an email to you! {{blu}}</h2>
+    <h2 class="mdc-typography--headline5">Let's send an email to you!</h2>
     <form id="ingredient_form" class="validated_form" method="post" enctype="multipart/form-data">
       <div class="mdc-text-field full-name" data-mdc-auto-init="MDCTextField">
 	{{ form.name(class="mdc-text-field__input") }}

@@ -1,0 +1,4 @@
+runtime: python37
+
+env_variables:
+  SENDGRID_API_KEY: "__SENDGRID_SECRET__"
