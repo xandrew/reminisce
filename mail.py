@@ -3,12 +3,12 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileType, FileName, Disposition, ContentId
 
-def send(full_name, img):
+def send(email, full_name, img, ocr_text):
     message = Mail(
         from_email='andras.nemeth@electrocuted-snail.com',
-        to_emails='xxandreww@gmail.com',
-        subject='Sending you a great picture!',
-        html_content=f'<strong>Dear {full_name}, I hope you love this image!</strong>')
+        to_emails=email,
+        subject='Electrocuted document',
+        html_content=f'Document ID BLABLA electrocuted!<BR>Find original attached. OCRed text for searchability:<BR>{ocr_text}')
     message.attachment = Attachment(FileContent(base64.b64encode(img).decode("utf-8")),
                                     FileName('image.jpg'),
                                     FileType('image/jpeg'),

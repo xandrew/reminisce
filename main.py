@@ -11,6 +11,7 @@ from firebase_admin import firestore
 import datetime
 
 from my_pretty_form import MyPrettyForm
+from image_stuff import do_OCR
 import mail
 
 # Use the application default credentials
@@ -33,8 +34,6 @@ h1 = logging.StreamHandler(sys.stderr)
 h1.setFormatter(logging.Formatter('%(levelname)-8s %(asctime)s %(filename)s:%(lineno)s] %(message)s'))
 app.logger.addHandler(h1)
 
-
-alma = 15
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -99,47 +98,20 @@ def _on_signin(blueprint, token):
     
 @app.route('/login')
 def login():
-    return redirect(url_for('google.login'))
+    return render_template('./intro.html')
+    #return redirect(url_for('google.login'))
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return "OK"
+    return redirect(url_for('root'))
 
 @app.route('/')
-@login_required
 def root():
-    """Return a friendly HTTP greeting."""
-    global alma
-    alma += 1
-    return render_template(
-            './alma.html',
-            email=current_user.email,
-            picture=current_user.picture)
-
-@app.route('/writedb')
-def writedb():
-  doc_ref = db.collection('requests').document('theonlyone')
-  doc_ref.set({
-    'hello': 'World',
-    'lasttime': datetime.datetime.now()
-  })
-  mail.send_example()
-  return render_template('./img.html')
-
-
-@app.route('/bla/<slug>')
-def hello(slug):
-    """Return a friendly HTTP greeting."""
-    global alma
-    alma += 1
-    return render_template(
-            './alma.html',
-            slug=slug,
-            alma=alma)
-
+    return redirect(url_for('pretty_form'))
 
 @app.route('/form', methods=['POST', 'GET'])
+@login_required
 def pretty_form():
     form = MyPrettyForm(request.form)
     form.validate()
@@ -147,8 +119,8 @@ def pretty_form():
     img = []
     if image_file is not None:
         img = image_file.read()
-        mail.send(form.name.data, img)
-    return render_template('./my_pretty_form.html', form=form, blu=len(img))
+        mail.send(current_user.email, form.name.data, img, do_OCR(img))
+    return render_template('./my_pretty_form.html', form=form)
 
 
 
