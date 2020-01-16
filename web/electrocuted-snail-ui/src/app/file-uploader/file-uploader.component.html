@@ -1,0 +1,19 @@
+<style>
+input[type=file] {
+    display:block;
+    height:0;
+    width:0;
+}
+</style>
+
+<div>
+  <mat-form-field *ngIf="fileName">
+    <input matInput [placeholder]="'Page/scan #' + id" [value]="fileName">
+  </mat-form-field>
+  <input [id]="'img' + id" name="img" type="file" #fileInput (change)="handleFileInput($event.target.files)">
+  <button mat-button color="primary" *ngIf="!fileName" (click)="fileInput.click()">
+    Add {{(id != 0) ? 'another' : ''}} photo/scan</button>
+  <button mat-icon-button *ngIf="fileName" color="accent" (click)="onRemove()" aria-label="Remove page/scan">
+    <mat-icon>clear</mat-icon>
+  </button>
+</div>

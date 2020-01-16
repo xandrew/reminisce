@@ -1,0 +1,10 @@
+<style>
+</style>
+
+<div>
+  <h2>Electrocute a new document</h2>
+  <app-file-uploader *ngFor="let id of ids" [id]="id" (selected)='fileSelected()' (remove)='removeId(id)'></app-file-uploader>
+  <div class="button-container">
+    <button mat-raised-button color="primary">Go Electrocute!</button>
+  </div>
+</div>

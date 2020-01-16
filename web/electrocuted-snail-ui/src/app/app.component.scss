@@ -1,0 +1,26 @@
+app-file-uploader {
+  display: block;
+  width: 300px;
+  margin: 20px auto;
+}
+
+h2, p {
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 300px;
+  margin: auto;
+}
+
+.button-container button {
+  margin: 3px;
+}
+
+.file-input-container input[type=file] {
+    display:block;
+    height:0;
+    width:0;
+}
