@@ -9,18 +9,21 @@ export class FileUploaderComponent implements OnInit {
   constructor() { }
 
   @Output() selected = new EventEmitter();
+  @Output() file = new EventEmitter<File>();
   @Output() remove = new EventEmitter();
   @Input() id;
 
   handleFileInput(files: FileList) {
-    this.fileName = files.item(0).name;
-    if (this.fileName) {
+    var file = files.item(0);
+    this.fileName = file.name;
+    if (file.name) {
       this.selected.emit();
+      this.file.emit(file);
     }
   }
 
   onRemove() {
-    this.remove.emit(this.id);
+    this.remove.emit();
   }
 
   ngOnInit() {

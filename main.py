@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_cors import CORS
 from flask_login import LoginManager
 from flask_login import login_user, current_user, login_required, logout_user
 import logging
@@ -33,7 +34,7 @@ app.logger.setLevel(logging.DEBUG)
 h1 = logging.StreamHandler(sys.stderr)
 h1.setFormatter(logging.Formatter('%(levelname)-8s %(asctime)s %(filename)s:%(lineno)s] %(message)s'))
 app.logger.addHandler(h1)
-
+CORS(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -122,7 +123,16 @@ def pretty_form():
         mail.send(current_user.email, form.name.data, img, do_OCR(img))
     return render_template('./my_pretty_form.html', form=form)
 
-
+@app.route('/electrocute', methods=['POST'])
+def electrocute():
+    print('Something has happened.')
+    print(request.json)
+    print(request.form)
+    print(request.files)
+    non_empty = [(file, file.read()) for file in request.files.values() if file.filename]
+    ocrs = [do_OCR(image_data) for image_file,image_data in non_empty if image_file.content_type == 'image/jpeg']
+    mail.send('xxandreww@gmail.com', request.form['notes'], non_empty, ocrs)
+    return '{"here": "alma"}'
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 app-file-uploader {
   display: block;
   width: 300px;
-  margin: 20px auto;
+  margin: 2px auto;
 }
 
 h2, p {
@@ -19,8 +19,6 @@ h2, p {
   margin: 3px;
 }
 
-.file-input-container input[type=file] {
-    display:block;
-    height:0;
-    width:0;
+.notes-field {
+    width: 300px;
 }

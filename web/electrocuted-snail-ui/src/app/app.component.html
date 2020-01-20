@@ -3,8 +3,28 @@
 
 <div>
   <h2>Electrocute a new document</h2>
-  <app-file-uploader *ngFor="let id of ids" [id]="id" (selected)='fileSelected()' (remove)='removeId(id)'></app-file-uploader>
-  <div class="button-container">
-    <button mat-raised-button color="primary">Go Electrocute!</button>
-  </div>
+  <form #f (ngSubmit)="sendRequest(f)">
+    <mat-vertical-stepper linear='true'>
+      <mat-step [completed]='ids.length > 1' label='Scan/photo your document'>
+	<app-file-uploader *ngFor="let id of ids" [id]="id" (selected)='fileSelected()' (remove)='removeId(id)' (file)='gotFile(id, $event)'></app-file-uploader>
+      </mat-step>
+      <mat-step label='Add tags' optional>
+      </mat-step>
+      <mat-step label='Add notes' optional>
+	<mat-form-field class='notes-field'>
+	  <textarea matInput type="text" name="notes" placeholder="Add note you want to include in the email" cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="500"></textarea>
+	</mat-form-field>
+      </mat-step>
+      <mat-step label='Store hard copy' optional>
+      </mat-step>
+      <mat-step label='Electrocute!'>
+	<div class="button-container">
+	  <button type="submit" mat-raised-button color="primary">Go Electrocute!</button>
+	</div>
+      </mat-step>
+    </mat-vertical-stepper>
+  </form>
 </div>
