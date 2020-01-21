@@ -4,7 +4,7 @@ app-file-uploader {
   margin: 2px auto;
 }
 
-h2, p {
+h2 {
   text-align: center;
 }
 
@@ -21,4 +21,13 @@ h2, p {
 
 .notes-field {
     width: 300px;
+}
+
+.harddiv {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.harddiv mat-slide-toggle,mat-form-field,p {
+    padding: 10px 0px;
 }

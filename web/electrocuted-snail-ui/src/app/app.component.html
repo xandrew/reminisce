@@ -5,7 +5,7 @@
   <h2>Electrocute a new document</h2>
   <form #f (ngSubmit)="sendRequest(f)">
     <mat-vertical-stepper linear='true'>
-      <mat-step [completed]='ids.length > 1' label='Scan/photo your document'>
+      <mat-step optional [completed]='ids.length > 1' label='Scan/photo your document'>
 	<app-file-uploader *ngFor="let id of ids" [id]="id" (selected)='fileSelected()' (remove)='removeId(id)' (file)='gotFile(id, $event)'></app-file-uploader>
       </mat-step>
       <mat-step label='Add tags' optional>
@@ -18,7 +18,39 @@
             cdkAutosizeMaxRows="500"></textarea>
 	</mat-form-field>
       </mat-step>
-      <mat-step label='Store hard copy' optional>
+      <mat-step label='Hard copy storage' [optional]='!storeHardCopy' [completed]="folderLabel != ''">
+	<input type="hidden" name="folder" [value]='folderLabel'>
+	<div class='harddiv'>
+	  <mat-slide-toggle name='hardcopy' [(ngModel)]='storeHardCopy'>
+	    Store hard copy
+	  </mat-slide-toggle>
+	  <div *ngIf='!storeHardCopy' class="mat-caption">
+	    So email is enough? Just drop this document into the paper bin <b>once the email has arrived.</b>
+	  </div>
+	  <mat-form-field *ngIf='storeHardCopy'>
+	    <mat-label>I need to keep this hard copy for</mat-label>
+	    <mat-select [(value)]="expiry">
+	      <mat-option value="1">1 year</mat-option>
+	      <mat-option value="2">2 years</mat-option>
+	      <mat-option value="3">3 years</mat-option>
+	      <mat-option value="5">5 years</mat-option>
+	      <mat-option value="10">10 years</mat-option>
+	      <mat-option value="-1">ethernity</mat-option>
+	    </mat-select>
+	  </mat-form-field>
+	  <div *ngIf='folderLabel'>
+	    <p>Please put your hard copy in the folder labeled &quot;<b>{{folderLabel}}</b>&quot;!</p>
+	    <button type="button" mat-raised-button color="accent" (click)='folderFull()'>Or, click here if that folder is full!</button>
+	  </div>
+	  <div *ngIf='needFolderFor'>
+	    <p *ngIf='firstFolder'>There is no physical folder for this expiry yet, please create one!</p>
+	    <p *ngIf='!firstFolder'>So your previous folder is full. Please create a new one!</p>
+	    <p>Please label your new folder with &quot;<b>{{nextLabel}}</b>&quot;</p>
+	    <p *ngIf="needFolderFor != 'ethernity'">On the first day of year {{needFolderFor}}, you can ceremonically toss all documents in this new folder into the garbage. <br><span class='mat-caption'>(Or shred it. Or burn it. Totally up to you!)</span></p>
+	    <button type="button" *ngIf="!firstFolder" mat-raised-button (click)='cancelNewFolder()'>Cancel</button>
+	    <button type="button" mat-raised-button color="accent" (click)='createFolder(needFolderFor, nextOrdinal)'>I'm done</button>
+	  </div>
+	</div>
       </mat-step>
       <mat-step label='Electrocute!'>
 	<div class="button-container">

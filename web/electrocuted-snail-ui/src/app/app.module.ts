@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatStepperModule } from '@angular/material/stepper';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSelectModule } from '@angular/material/select';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -30,6 +32,8 @@ import { FileUploaderComponent } from './file-uploader/file-uploader.component';
     MatIconModule,
     MatStepperModule,
     TextFieldModule,
+    MatSlideToggleModule,
+    MatSelectModule,
     HttpClientModule
   ],
   providers: [],

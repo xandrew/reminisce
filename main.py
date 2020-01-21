@@ -1,4 +1,5 @@
 import logging
+import json
 import sys
 import os
 import datetime
@@ -129,8 +130,9 @@ if not os.getenv('GAE_ENV', '').startswith('standard'):
 
 
 # ============== Ajax endpoints =======================
+
 # Endpoint for electrocuting a new document.
-@app.route('/electrocute', methods=['POST', 'GET'])
+@app.route('/electrocute', methods=['POST'])
 @login_required
 def electrocute():
     non_empty = [(file, file.read())
@@ -139,10 +141,59 @@ def electrocute():
     ocrs = [do_OCR(image_data)
             for image_file,image_data in non_empty
             if image_file.content_type == 'image/jpeg']
-    mail.send(current_user.email, request.form['notes'], non_empty, ocrs)
+    print(request.form);
+    #mail.send(current_user.email, request.form['notes'], non_empty, ocrs)
     return '{"here": "alma"}'
 
 
+# Endpoints for folder management
+def folder_doc(email, year):
+    return db.collection('users').document(email).collection('folders').document(f'folder_for_{year}')
+
+def folder_response(year, ordinal):
+    return json.dumps({'label': f'{year} #{ordinal}', 'ordinal': ordinal})
+
+def process_year(year):
+    if year != 'ethernity':
+        return int(year)
+    return year
+
+@app.route('/folder_for_discard_year', methods=['GET'])
+@login_required
+def folder_for_discard_year():
+    year = process_year(request.args['year'])
+    folder = folder_doc(current_user.email, year).get()
+    if folder.exists:
+        ordinal = folder.get('ordinal')
+        return folder_response(year, ordinal)
+    else:
+        return json.dumps({})
+    
+@app.route('/next_folder_for_discard_year', methods=['GET'])
+@login_required
+def next_folder_for_discard_year():
+    year = process_year(request.args['year'])
+    folder = folder_doc(current_user.email, year).get()
+    if folder.exists:
+        ordinal = folder.get('ordinal') + 1
+    else:
+        ordinal = 1
+    return folder_response(year, ordinal)
+
+@app.route('/set_folder_for_discard_year', methods=['GET'])
+@login_required
+def set_folder_for_discard_year():
+    year = process_year(request.args['year'])
+    ordinal = int(request.args['ordinal'])
+    assert ordinal > 0
+    folder = folder_doc(current_user.email, year)
+    if ordinal == 1:
+        folder.set({})
+    folder.update({'ordinal': ordinal})
+    return folder_response(year, ordinal)
+
+
+# ============= Boilerplate!!! ========================
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This
