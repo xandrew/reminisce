@@ -1,0 +1,24 @@
+app-file-uploader {
+  display: block;
+  width: 300px;
+  margin: 2px auto;
+}
+
+h2, p {
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 300px;
+  margin: auto;
+}
+
+.button-container button {
+  margin: 3px;
+}
+
+.notes-field {
+    width: 300px;
+}

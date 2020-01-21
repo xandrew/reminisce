@@ -1,0 +1,15 @@
+input[type=file] {
+    display:inline-block;
+    height:0;
+    width:0;
+}
+mat-form-field {
+    width:260px;
+}
+
+.uploader-item {
+    display:flex;
+    justify-content:center;
+}
+
+    

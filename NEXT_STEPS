@@ -1,4 +1,6 @@
-Create a hierarchic HTML view setup with a logged in and a non logged in page.
-Send an email!
-Set up material design.
+Clean up
+Something should happen on the UI on successful electrocution
+Physical Folder handling
+Tags handling
 HTTP redirect to HTTPs.
+Use angular for non logged in users as well for UI consistency (delete intro.html and the static directory)

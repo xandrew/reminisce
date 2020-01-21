@@ -2,3 +2,14 @@ runtime: python37
 
 env_variables:
   SENDGRID_API_KEY: "__SENDGRID_SECRET__"
+
+handlers:
+- url: /ui$
+  mime_type: text/html
+  expiration: 0m
+  static_files: prod_ui/index.html
+  upload: prod_ui/index.html
+
+- url: /ui/
+  static_dir: prod_ui/
+
