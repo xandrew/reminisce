@@ -1,33 +1,33 @@
-from flask import Flask, render_template, request, redirect, url_for
-#from flask_cors import CORS
-from flask_login import LoginManager
-from flask_login import login_user, current_user, login_required, logout_user
 import logging
 import sys
 import os
-from flask_dance.contrib.google import make_google_blueprint, google
-from flask_dance.consumer import oauth_authorized
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
 import datetime
 from requests import get
 
-from my_pretty_form import MyPrettyForm
+from flask import Flask, render_template, request, redirect, url_for
+from flask_login import LoginManager
+from flask_login import login_user, current_user, login_required, logout_user
+from flask_dance.contrib.google import make_google_blueprint, google
+from flask_dance.consumer import oauth_authorized
+
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
 from image_stuff import do_OCR
 import mail
 
+
+# ========== FireStore connection ================
 # Use the application default credentials
 cred = credentials.ApplicationDefault()
 firebase_admin.initialize_app(cred, {
   'projectId': 'electrocuted-snail',
 })
-
 db = firestore.client()
 
 
-
-
+# ========== Flask setup ==========================
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
 app = Flask(__name__, template_folder='views')
@@ -36,27 +36,9 @@ app.logger.setLevel(logging.DEBUG)
 h1 = logging.StreamHandler(sys.stderr)
 h1.setFormatter(logging.Formatter('%(levelname)-8s %(asctime)s %(filename)s:%(lineno)s] %(message)s'))
 app.logger.addHandler(h1)
-#CORS(app)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-#login_manager.anonymous_user = "BELA" # accountmodels.AnonymousUser
-login_manager.login_view = 'login'
 
-@login_manager.user_loader
-def load_user(user_id):
-    return user_from_db(db, user_id)
-
-google_blueprint = make_google_blueprint(
-    client_id='387666456097-gpv671f9feq2s66ul0goi4c51913uqj7.apps.googleusercontent.com',
-    client_secret='OLfJlshhM_BJ86o3x3cvLw2i',
-    scope=[
-        'openid',
-        'https://www.googleapis.com/auth/userinfo.email',
-    ]
-)
-app.register_blueprint(google_blueprint, url_prefix='/auth')
-
+# ============ SnailUser =========================
 def user_db_ref(db, email):
     return db.collection('users').document(email)
         
@@ -92,6 +74,26 @@ class SnailUser:
     def __str__(self):
         return f'User with email {self.email}'
 
+
+# ========== Login setup ===========================
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return user_from_db(db, user_id)
+
+google_blueprint = make_google_blueprint(
+    client_id='387666456097-gpv671f9feq2s66ul0goi4c51913uqj7.apps.googleusercontent.com',
+    client_secret='OLfJlshhM_BJ86o3x3cvLw2i',
+    scope=[
+        'openid',
+        'https://www.googleapis.com/auth/userinfo.email',
+    ]
+)
+app.register_blueprint(google_blueprint, url_prefix='/auth')
+
 @oauth_authorized.connect
 def _on_signin(blueprint, token):
     user_json = google.get('oauth2/v1/userinfo').json()
@@ -102,52 +104,21 @@ def _on_signin(blueprint, token):
 @app.route('/login')
 def login():
     return render_template('./intro.html')
-    #return redirect(url_for('google.login'))
 
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('root'))
 
+
+# ============== Main endpoints ========================
+# Just redirects to where angular asserts are served from.
 @app.route('/')
 def root():
     return redirect('/ui')
 
-@app.route('/alma')
-@login_required
-def alma():
-    return render_template('./alma.html', email=current_user.email, picture=current_user.picture)
-
-@app.route('/serving')
-def serv_deb():
-    server = os.getenv('SERVER_SOFTWARE', '')
-    other = os.getenv('GAE_ENV', '')
-    return f'Serving software: {server} GAE: {other}'
-
-@app.route('/form', methods=['POST', 'GET'])
-@login_required
-def pretty_form():
-    form = MyPrettyForm(request.form)
-    form.validate()
-    image_file = request.files.get(form.img.name)
-    img = []
-    if image_file is not None:
-        img = image_file.read()
-        mail.send(current_user.email, form.name.data, img, do_OCR(img))
-    return render_template('./my_pretty_form.html', form=form)
-
-@app.route('/electrocute', methods=['POST', 'GET'])
-@login_required
-def electrocute():
-    print('Something has happened.')
-    print(request.json)
-    print(request.form)
-    print(request.files)
-    non_empty = [(file, file.read()) for file in request.files.values() if file.filename]
-    ocrs = [do_OCR(image_data) for image_file,image_data in non_empty if image_file.content_type == 'image/jpeg']
-    mail.send(current_user.email, request.form['notes'], non_empty, ocrs)
-    return '{"here": "alma"}'
-
+# In dev mode, we proxy /ui over to ng serve. In prod, static assets are served as
+# configured in app.yaml. (See deploy.sh for exact details on how app.yaml is generated.)
 if not os.getenv('GAE_ENV', '').startswith('standard'):
     @app.route('/ui', defaults={'path': ''})
     @app.route('/ui/<path:path>')
@@ -155,6 +126,21 @@ if not os.getenv('GAE_ENV', '').startswith('standard'):
     def ui_proxy(path):
         resp = get(f'http://localhost:4200/ui/{path}', stream=True)
         return resp.raw.read(), resp.status_code, resp.headers.items()
+
+
+# ============== Ajax endpoints =======================
+# Endpoint for electrocuting a new document.
+@app.route('/electrocute', methods=['POST', 'GET'])
+@login_required
+def electrocute():
+    non_empty = [(file, file.read())
+                 for file in request.files.values()
+                 if file.filename]
+    ocrs = [do_OCR(image_data)
+            for image_file,image_data in non_empty
+            if image_file.content_type == 'image/jpeg']
+    mail.send(current_user.email, request.form['notes'], non_empty, ocrs)
+    return '{"here": "alma"}'
 
 
 if __name__ == '__main__':
