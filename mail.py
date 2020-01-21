@@ -7,7 +7,7 @@ def send(email, notes, files, ocr_texts):
     id = 'BLA'
     html_content = f'Document ID {id} electrocuted!<BR>Find originals attached.'
     if notes:
-        html_content += 'Notes:<BR>\n{notes}<BR>\n'
+        html_content += f'Notes:<BR>\n{notes}<BR>\n'
 
     if ocr_texts:
         html_content += 'OCRed texts for searchability:<BR>'

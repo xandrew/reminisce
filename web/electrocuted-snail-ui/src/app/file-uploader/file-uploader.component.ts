@@ -13,6 +13,8 @@ export class FileUploaderComponent implements OnInit {
   @Output() remove = new EventEmitter();
   @Input() id;
 
+  fileName: string;
+
   handleFileInput(files: FileList) {
     var file = files.item(0);
     this.fileName = file.name;

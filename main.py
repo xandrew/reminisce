@@ -1,15 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_cors import CORS
+#from flask_cors import CORS
 from flask_login import LoginManager
 from flask_login import login_user, current_user, login_required, logout_user
 import logging
 import sys
+import os
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import oauth_authorized
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import datetime
+from requests import get
 
 from my_pretty_form import MyPrettyForm
 from image_stuff import do_OCR
@@ -34,7 +36,7 @@ app.logger.setLevel(logging.DEBUG)
 h1 = logging.StreamHandler(sys.stderr)
 h1.setFormatter(logging.Formatter('%(levelname)-8s %(asctime)s %(filename)s:%(lineno)s] %(message)s'))
 app.logger.addHandler(h1)
-CORS(app)
+#CORS(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -109,7 +111,18 @@ def logout():
 
 @app.route('/')
 def root():
-    return redirect(url_for('pretty_form'))
+    return redirect('/ui')
+
+@app.route('/alma')
+@login_required
+def alma():
+    return render_template('./alma.html', email=current_user.email, picture=current_user.picture)
+
+@app.route('/serving')
+def serv_deb():
+    server = os.getenv('SERVER_SOFTWARE', '')
+    other = os.getenv('GAE_ENV', '')
+    return f'Serving software: {server} GAE: {other}'
 
 @app.route('/form', methods=['POST', 'GET'])
 @login_required
@@ -123,7 +136,8 @@ def pretty_form():
         mail.send(current_user.email, form.name.data, img, do_OCR(img))
     return render_template('./my_pretty_form.html', form=form)
 
-@app.route('/electrocute', methods=['POST'])
+@app.route('/electrocute', methods=['POST', 'GET'])
+@login_required
 def electrocute():
     print('Something has happened.')
     print(request.json)
@@ -131,8 +145,16 @@ def electrocute():
     print(request.files)
     non_empty = [(file, file.read()) for file in request.files.values() if file.filename]
     ocrs = [do_OCR(image_data) for image_file,image_data in non_empty if image_file.content_type == 'image/jpeg']
-    mail.send('xxandreww@gmail.com', request.form['notes'], non_empty, ocrs)
+    mail.send(current_user.email, request.form['notes'], non_empty, ocrs)
     return '{"here": "alma"}'
+
+if not os.getenv('GAE_ENV', '').startswith('standard'):
+    @app.route('/ui', defaults={'path': ''})
+    @app.route('/ui/<path:path>')
+    @login_required
+    def ui_proxy(path):
+        resp = get(f'http://localhost:4200/ui/{path}', stream=True)
+        return resp.raw.read(), resp.status_code, resp.headers.items()
 
 
 if __name__ == '__main__':
