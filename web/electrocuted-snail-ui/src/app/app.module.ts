@@ -10,6 +10,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -34,6 +35,7 @@ import { FileUploaderComponent } from './file-uploader/file-uploader.component';
     TextFieldModule,
     MatSlideToggleModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
     HttpClientModule
   ],
   providers: [],

@@ -21,9 +21,12 @@ class ElectrocuteRequest {
 })
 export class AppComponent implements OnInit {
   title = 'electrocuted-snail-ui';
+  successPage = false;
+  electrocutionInProgress = false;
   ids: number[];
   nextId: number;
   files: object;
+  docId = '';
   folderLabel = '';
   firstFolder: boolean;
   nextLabel = '';
@@ -91,9 +94,6 @@ export class AppComponent implements OnInit {
   }
 
   constructor(private http: HttpClient) {
-    this.ids = [0];
-    this.nextId = 1;
-    this.files = {};
   }
 
   fileSelected() {
@@ -112,8 +112,11 @@ export class AppComponent implements OnInit {
   sendRequest(f) {
     console.log(f)
     var fd = new FormData(f);
+    this.electrocutionInProgress = true;
     this.http.post('/electrocute', fd).subscribe(resp => {
       console.log(resp);
+      this.electrocutionInProgress = false;
+      this.successPage = true;
     });
   }
 
@@ -136,6 +139,24 @@ export class AppComponent implements OnInit {
     this.expiry = this.expiry;
   }
 
+  newElectrocution() {
+    this.successPage = false;
+    this.ids = [0];
+    this.nextId = 1;
+    this.files = {};
+    this.docId = '';
+    this.folderLabel = '';
+    this.nextLabel = '';
+    this.nextOrdinal = -1;
+    this._needFolderFor = '';
+    this._storeHardCopy = false;
+    this.http.get('/get_next_id').subscribe(
+      resp => {
+        this.docId = resp['id'];
+      });
+  }
+
   ngOnInit() {
+    this.newElectrocution();
   }
 }
