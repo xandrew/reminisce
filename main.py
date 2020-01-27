@@ -58,7 +58,12 @@ class SnailUser:
         self.picture = picture
 
     def save_to_db(self, db):
-        user_db_ref(db, self.email).set({'picture': self.picture})
+        ref = user_db_ref(db, self.email)
+        initial_data = {'picture': self.picture}
+        if ref.get().exists:
+            ref.update(initial_data)
+        else:
+            ref.set(initial_data)
     
     @property
     def is_active(self):
