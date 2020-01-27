@@ -20,6 +20,7 @@
 	<app-file-uploader *ngFor="let id of ids" [id]="id" (selected)='fileSelected()' (remove)='removeId(id)' (file)='gotFile(id, $event)'></app-file-uploader>
       </mat-step>
       <mat-step label='Add tags' optional>
+	<app-tag-pane></app-tag-pane>
       </mat-step>
       <mat-step label='Add notes' optional>
 	<mat-form-field class='notes-field'>

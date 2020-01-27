@@ -149,7 +149,7 @@ def electrocute():
             for image_file,image_data in non_empty
             if image_file.content_type == 'image/jpeg']
     print(request.form);
-    mail.send(current_user.email, request.form['notes'], non_empty, ocrs, request.form['folder'], request.form['docId'])
+    #mail.send(current_user.email, request.form['notes'], non_empty, ocrs, request.form['folder'], request.form['docId'])
     return json.dumps({})
 
 
@@ -229,6 +229,29 @@ def get_next_id():
     next_id = increment_last_id(transaction, user_db_ref(db, current_user.email))
     return json.dumps({'id': as_string_id(next_id)})
   
+
+# Tags handling
+def tags_collection(email):
+    return user_db_ref(db, email).collection('tags')
+
+@firestore.transactional
+def replace_tags(transaction, tags_col, new_tags):
+    for ds in tags_col.stream(transaction=transaction):
+        transaction.delete(ds.reference)
+    for t in new_tags:
+        transaction.set(tags_col.document(t['tag_id']), t)
+
+@app.route('/get_tags', methods=['GET'])
+@login_required
+def get_tags():    
+    return json.dumps([t.to_dict() for t in tags_collection(current_user.email).stream()])
+
+@app.route('/set_tags', methods=['POST'])
+@login_required
+def set_tags():
+    transaction = db.transaction()
+    replace_tags(transaction, tags_collection(current_user.email), request.json)
+    return json.dumps({})
 
 # ============= Boilerplate!!! ========================
 if __name__ == '__main__':

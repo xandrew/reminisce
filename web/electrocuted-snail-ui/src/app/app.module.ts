@@ -11,17 +11,22 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FileUploaderComponent } from './file-uploader/file-uploader.component';
+import { TagPaneComponent } from './tag-pane/tag-pane.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FileUploaderComponent
+    FileUploaderComponent,
+    TagPaneComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +41,9 @@ import { FileUploaderComponent } from './file-uploader/file-uploader.component';
     MatSlideToggleModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
+    MatButtonToggleModule,
+    MatDividerModule,
     HttpClientModule
   ],
   providers: [],

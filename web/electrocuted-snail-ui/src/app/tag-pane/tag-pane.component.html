@@ -1,0 +1,50 @@
+<div *ngIf="!edit">
+  <mat-button-toggle-group multiple vertical [(value)] = "selectedValue">
+    <mat-button-toggle *ngFor="let tag of tags" [value]='tag.tag_id' [aria-label]='tag.description'>
+      <div class="tag-label">
+	<mat-icon>{{tag.icon}}</mat-icon>
+	<span>{{tag.description}}</span>
+	<div></div>
+      </div>
+  </mat-button-toggle>
+  </mat-button-toggle-group>
+  <input type="hidden" name="tags" [value]="selectedValue">
+  <button type="button" mat-raised-button color="accent" (click)="startEdit()">
+    Edit tags
+  </button>
+</div>
+
+<div *ngIf="edit">
+  <div *ngFor="let tag of tags; index as i; last as isLast" class="edit-item">
+    <div class='id-and-icon'>
+      <mat-form-field>
+	<input matInput placeholder="Tag id" [(ngModel)]="tag.tag_id">
+      </mat-form-field>
+      <div class='icon-with-label'>
+	<span class="mat-small icon-label">
+	  Icon
+	</span>
+	<button type="button" mat-icon-button color="accent">
+	  <mat-icon>{{tag.icon}}</mat-icon>
+	</button>
+      </div>
+    </div>
+    <div class='desc-and-remove-button'>
+      <mat-form-field class='desc-field'>
+	<input matInput placeholder="Description" [(ngModel)]="tag.description">
+      </mat-form-field>
+      <button type="button" mat-icon-button color="primary" (click)="removeTag(i)">
+	<mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+  <div class="buttons">
+    <button type="button" mat-raised-button color="primary" (click)="saveTags()">
+      Save
+    </button>
+    <button *ngIf="(tags.length == 0) || tags[tags.length - 1].tag_id" type="button" mat-icon-button color="primary" (click)="newTag()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>

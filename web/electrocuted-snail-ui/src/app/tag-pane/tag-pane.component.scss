@@ -1,0 +1,68 @@
+.tag-label {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tag-label mat-icon {
+    padding-right: 4px;
+}
+
+mat-button-toggle span {
+    margin: auto;
+}
+
+mat-button-toggle-group {
+    width: 300px;
+}
+
+.icon-label {
+    color: rgba(0,0,0,.54);
+}
+
+.icon-with-label {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.id-and-icon {
+    width: 300px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+mat-form-field {
+    width: 260px;
+}
+
+.id-and-icon button {
+    margin-top: -10px;
+}
+
+.desc-field {
+    width: 300px;
+}
+
+.desc-and-remove-button {
+    width: 300px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+mat-divider {
+    margin-bottom: 6px;
+}
+
+.buttons {
+    width: 300px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
