@@ -1,22 +1,20 @@
-app-file-uploader {
-  display: block;
-  width: 300px;
-  margin: 2px auto;
+.margin-background {
+    width: 100%;
+    height: 100%;
+    /*background: RGBA(30, 30, 60, 1);*/
+}
+
+.main {
+    width: 400px;
+    height: 100%;
+    margin: auto;
+    background: white;
 }
 
 h2 {
-  text-align: center;
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-  width: 300px;
-  margin: auto;
-}
-
-.button-container button {
-  margin: 3px;
+    text-align: center;
+    margin: 0 0;
+    padding: 15px 0;
 }
 
 .notes-field {

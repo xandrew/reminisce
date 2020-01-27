@@ -1,6 +1,8 @@
 <style>
 </style>
 
+<div class='margin-background mat-app-background'>
+<div class='main'>
 <div *ngIf='successPage' class='success-page'>
   <h2>Electrocution successful!</h2>
   <button type="button" mat-raised-button color="primary" (click)='newElectrocution()'>Electrocute another one!</button>
@@ -62,10 +64,10 @@
 	</div>
       </mat-step>
       <mat-step label='Electrocute!'>
-	<div class="button-container">
-	  <button type="submit" mat-raised-button color="primary">Go Electrocute!</button>
-	</div>
+	<button type="submit" mat-raised-button color="primary">Go Electrocute!</button>
       </mat-step>
     </mat-vertical-stepper>
   </form>
+</div>
+</div>
 </div>
