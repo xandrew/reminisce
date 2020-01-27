@@ -1,8 +1,10 @@
 import logging
+import json
 import sys
 import os
 import datetime
 from requests import get
+import math
 
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager
@@ -114,6 +116,7 @@ def logout():
 # ============== Main endpoints ========================
 # Just redirects to where angular asserts are served from.
 @app.route('/')
+@login_required
 def root():
     return redirect('/ui')
 
@@ -129,8 +132,9 @@ if not os.getenv('GAE_ENV', '').startswith('standard'):
 
 
 # ============== Ajax endpoints =======================
+
 # Endpoint for electrocuting a new document.
-@app.route('/electrocute', methods=['POST', 'GET'])
+@app.route('/electrocute', methods=['POST'])
 @login_required
 def electrocute():
     non_empty = [(file, file.read())
@@ -139,10 +143,89 @@ def electrocute():
     ocrs = [do_OCR(image_data)
             for image_file,image_data in non_empty
             if image_file.content_type == 'image/jpeg']
-    mail.send(current_user.email, request.form['notes'], non_empty, ocrs)
-    return '{"here": "alma"}'
+    print(request.form);
+    mail.send(current_user.email, request.form['notes'], non_empty, ocrs, request.form['folder'], request.form['docId'])
+    return json.dumps({})
 
 
+# Endpoints for folder management
+def folder_doc(email, year):
+    return user_db_ref(db, email).collection('folders').document(f'folder_for_{year}')
+
+def folder_response(year, ordinal):
+    return json.dumps({'label': f'{year} #{ordinal}', 'ordinal': ordinal})
+
+def process_year(year):
+    if year != 'ethernity':
+        return int(year)
+    return year
+
+@app.route('/folder_for_discard_year', methods=['GET'])
+@login_required
+def folder_for_discard_year():
+    year = process_year(request.args['year'])
+    folder = folder_doc(current_user.email, year).get()
+    if folder.exists:
+        ordinal = folder.get('ordinal')
+        return folder_response(year, ordinal)
+    else:
+        return json.dumps({})
+    
+@app.route('/next_folder_for_discard_year', methods=['GET'])
+@login_required
+def next_folder_for_discard_year():
+    year = process_year(request.args['year'])
+    folder = folder_doc(current_user.email, year).get()
+    if folder.exists:
+        ordinal = folder.get('ordinal') + 1
+    else:
+        ordinal = 1
+    return folder_response(year, ordinal)
+
+@app.route('/set_folder_for_discard_year', methods=['GET'])
+@login_required
+def set_folder_for_discard_year():
+    year = process_year(request.args['year'])
+    ordinal = int(request.args['ordinal'])
+    assert ordinal > 0
+    folder = folder_doc(current_user.email, year)
+    if ordinal == 1:
+        folder.set({})
+    folder.update({'ordinal': ordinal})
+    return folder_response(year, ordinal)
+
+
+@firestore.transactional
+def increment_last_id(transaction, user):
+  snapshot = user.get(transaction=transaction)
+  try:
+      last_id = snapshot.get('last_document_id')
+  except KeyError:
+      last_id = -1
+  next_id = last_id + 1
+  transaction.update(user, {'last_document_id': next_id})
+  return next_id
+
+letters = [chr(ord('A') + i) for i in range(ord('Z') - ord('A') + 1)]
+num_letters = len(letters)
+def as_string_id(num_id):
+    num_digits = max(math.ceil(math.log(num_id + 1, num_letters)), 3)
+    result = ''
+    for i in range(num_digits):
+        result = letters[num_id % num_letters] + result
+        num_id //= num_letters
+    assert num_id == 0
+    return result
+
+@app.route('/get_next_id', methods=['GET'])
+@login_required
+def get_next_id():
+    transaction = db.transaction()
+    next_id = increment_last_id(transaction, user_db_ref(db, current_user.email))
+    return json.dumps({'id': as_string_id(next_id)})
+  
+
+# ============= Boilerplate!!! ========================
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This

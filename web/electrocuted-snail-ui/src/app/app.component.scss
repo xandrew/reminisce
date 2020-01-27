@@ -1,24 +1,57 @@
-app-file-uploader {
-  display: block;
-  width: 300px;
-  margin: 2px auto;
+.margin-background {
+    width: 100%;
+    height: 100%;
+    /*background: RGBA(30, 30, 60, 1);*/
 }
 
-h2, p {
-  text-align: center;
+.main {
+    width: 400px;
+    height: 100%;
+    margin: auto;
+    background: white;
 }
 
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-  width: 300px;
-  margin: auto;
-}
-
-.button-container button {
-  margin: 3px;
+h2 {
+    text-align: center;
+    margin: 0 0;
+    padding: 15px 0;
 }
 
 .notes-field {
     width: 300px;
+}
+
+.harddiv {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.harddiv mat-slide-toggle,mat-form-field,p {
+    padding: 10px 0px;
+}
+
+.progress-overlay {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.success-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
 }

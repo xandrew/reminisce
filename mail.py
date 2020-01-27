@@ -3,9 +3,13 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileType, FileName, Disposition, ContentId
 
-def send(email, notes, files, ocr_texts):
-    id = 'BLA'
-    html_content = f'Document ID {id} electrocuted!<BR>Find originals attached.'
+def send(email, notes, files, ocr_texts, folder, id):
+    html_content = f'Document ID {id} electrocuted!<BR>Find originals attached.<BR>'
+    if folder:
+        html_content += f'Hard copy was stored in folder {folder} with label {id}.<BR>'
+    else:
+        html_content += f'Hard copy of the document was discarded.<BR>'
+        
     if notes:
         html_content += f'Notes:<BR>\n{notes}<BR>\n'
 

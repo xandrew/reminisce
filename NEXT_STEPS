@@ -1,6 +1,9 @@
-Clean up
-Something should happen on the UI on successful electrocution
-Physical Folder handling
+Loginnal(?) kitorlodik a document ID!
 Tags handling
 HTTP redirect to HTTPs.
-Use angular for non logged in users as well for UI consistency (delete intro.html and the static directory)
+Use angular for non logged in users as well for UI consistency (delete intro.html and the static directory) Login enforcement from angular.
+Would be nice to include a folder creation animgif somehow.
+Somehow we should indicate on the UI why the user cannot progress.
+Bit of refactor. Break up main.py and app component.
+Handle ajax errors.
+app component reinitialization mess
