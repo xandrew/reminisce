@@ -1,4 +1,5 @@
 Tags handling
+Solve ExpressionChangedAfterItHasBeenCheckedError
 Use angular for non logged in users as well for UI consistency (delete intro.html and the static directory) Login enforcement from angular.
 Would be nice to include a folder creation animgif somehow.
 Somehow we should indicate on the UI why the user cannot progress.

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { IconSelectorComponent } from '../icon-selector/icon-selector.component';
 
 @Component({
   selector: 'app-tag-pane',
@@ -10,7 +12,7 @@ export class TagPaneComponent implements OnInit {
   tags: any[] = [];
   edit = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public dialog: MatDialog) { }
 
   get_tags() {
     this.http.get<any[]>(
@@ -45,5 +47,22 @@ export class TagPaneComponent implements OnInit {
         resp => {
 	    this.get_tags();
         });
+  }
+
+  cancelEdit() {
+    this.tags = [];
+    this.edit = false;
+    this.get_tags();
+  }
+
+  selectIcon(i) {
+    const dialogRef = this.dialog.open(IconSelectorComponent, {
+      width: '500px',
+      restoreFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.tags[i].icon = result;
+    });
   }
 }

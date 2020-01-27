@@ -24,7 +24,7 @@
 	<span class="mat-small icon-label">
 	  Icon
 	</span>
-	<button type="button" mat-icon-button color="accent">
+	<button type="button" mat-icon-button color="accent" (click)="selectIcon(i)">
 	  <mat-icon>{{tag.icon}}</mat-icon>
 	</button>
       </div>
@@ -40,9 +40,14 @@
     <mat-divider></mat-divider>
   </div>
   <div class="buttons">
-    <button type="button" mat-raised-button color="primary" (click)="saveTags()">
-      Save
-    </button>
+    <span>
+      <button type="button" mat-raised-button color="primary" (click)="saveTags()">
+	Save
+      </button>
+      <button type="button" mat-raised-button color="accent" (click)="cancelEdit()">
+	Cancel
+      </button>
+    </span>
     <button *ngIf="(tags.length == 0) || tags[tags.length - 1].tag_id" type="button" mat-icon-button color="primary" (click)="newTag()">
       <mat-icon>add</mat-icon>
     </button>
