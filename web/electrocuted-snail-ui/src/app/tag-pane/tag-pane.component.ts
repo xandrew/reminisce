@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IconSelectorComponent } from '../icon-selector/icon-selector.component';
@@ -12,6 +13,7 @@ export class TagPaneComponent implements OnInit {
   tags: any[] = [];
   edit = false;
   selectedValue = "";
+  formArray = new FormArray([]);
 
   constructor(private http: HttpClient, public dialog: MatDialog) { }
 
@@ -32,25 +34,45 @@ export class TagPaneComponent implements OnInit {
     this.getTags();
   }
 
+  groupFor(tag) {
+    return new FormGroup({
+        'tag_id': new FormControl(tag.tag_id, [
+	    Validators.required,
+	    control => {
+	      if (control.value.match(/^[A-Za-z0-9-]*$/)) {
+	        return {};
+              } else {
+	        return {'invalid-character': 1}
+	      }
+	    }]),
+	'description': new FormControl(tag.description),
+	'icon': new FormControl(tag.icon)})
+  }
+
   startEdit() {
+    for (var t of this.tags) {
+      this.formArray.push(this.groupFor(t))
+    }
+    this.clearTags();
     this.edit = true;
   }
 
   removeTag(i) {
-    this.tags.splice(i, 1);
+    this.formArray.removeAt(i);
   }
 
   newTag() {
-    this.tags.push({tag_id: '', description: '', icon: 'report'});
+    const t = {tag_id: '', description: '', icon: 'report'};
+    this.formArray.push(this.groupFor(t));
   }
 
   saveTags() {
-    var new_tags = this.tags;
-    this.clearTags();
+    var newTags = this.formArray.value;
     this.edit = false;
+    this.formArray.controls = [];
     this.http.post(
-      '/set_tags', new_tags).subscribe(
-        resp => {
+      '/set_tags', newTags).subscribe(
+        resp => {  
 	    this.getTags();
         });
   }
@@ -68,7 +90,18 @@ export class TagPaneComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.tags[i].icon = result;
+      (<FormGroup>this.formArray.controls[i]).controls['icon'].setValue(result);
     });
+  }
+
+  getErrorMessage(e) {
+    console.log(e);
+    if (e['required']) {
+      return 'Tag id is required!';
+    }
+    if (e['invalid-character']) {
+      return 'You can only use numbers, letters and dash!';
+    }
+    return 'Unknown error - this shouldn\'t happen.';
   }
 }

@@ -149,7 +149,10 @@ def electrocute():
             for image_file,image_data in non_empty
             if image_file.content_type == 'image/jpeg']
     print(request.form);
-    #mail.send(current_user.email, request.form['notes'], non_empty, ocrs, request.form['folder'], request.form['docId'])
+    tags = []
+    if request.form['tags']:
+        tags = request.form['tags'].split(',')
+    #mail.send(current_user.email, request.form['notes'], non_empty, ocrs, request.form['folder'], request.form['docId'], tags)
     return json.dumps({})
 
 

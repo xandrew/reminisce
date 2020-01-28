@@ -1,5 +1,5 @@
 <div *ngIf="!edit">
-  <mat-button-toggle-group multiple vertical [(ngModel)] = "selectedValue">
+  <mat-button-toggle-group *ngIf="tags.length > 0" multiple vertical [(ngModel)] = "selectedValue">
     <mat-button-toggle *ngFor="let tag of tags" [value]='tag.tag_id' [aria-label]='tag.description'>
       <div class="tag-label">
 	<mat-icon>{{tag.icon}}</mat-icon>
@@ -15,23 +15,31 @@
 </div>
 
 <div *ngIf="edit">
-  <div *ngFor="let tag of tags; index as i; last as isLast" class="edit-item">
+  <div *ngFor="let formGroup of formArray.controls; index as i; last as isLast" class="edit-item">
     <div class='id-and-icon'>
       <mat-form-field>
-	<input matInput placeholder="Tag id" [(ngModel)]="tag.tag_id">
+	<input
+	  matInput
+	  placeholder="Tag id"
+	  [formControl]="formGroup.controls['tag_id']"
+	  required>
+	<mat-error *ngIf="formGroup.controls['tag_id'].invalid">{{getErrorMessage(formGroup.controls['tag_id'].errors)}}</mat-error>
       </mat-form-field>
       <div class='icon-with-label'>
 	<span class="mat-small icon-label">
 	  Icon
 	</span>
 	<button type="button" mat-icon-button color="accent" (click)="selectIcon(i)">
-	  <mat-icon>{{tag.icon}}</mat-icon>
+	  <mat-icon>{{formGroup.controls['icon'].value}}</mat-icon>
 	</button>
       </div>
     </div>
     <div class='desc-and-remove-button'>
       <mat-form-field class='desc-field'>
-	<input matInput placeholder="Description" [(ngModel)]="tag.description">
+	<input
+	  matInput
+	  placeholder="Description"
+	  [formControl]="formGroup.controls['description']">
       </mat-form-field>
       <button type="button" mat-icon-button color="primary" (click)="removeTag(i)">
 	<mat-icon>delete</mat-icon>
@@ -41,7 +49,7 @@
   </div>
   <div class="buttons">
     <span>
-      <button type="button" mat-raised-button color="primary" (click)="saveTags()">
+      <button type="button" mat-raised-button color="primary" (click)="saveTags()" [disabled]="formArray.invalid">
 	Save
       </button>
       <button type="button" mat-raised-button color="accent" (click)="cancelEdit()">
