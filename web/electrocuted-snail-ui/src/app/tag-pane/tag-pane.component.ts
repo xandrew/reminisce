@@ -11,10 +11,16 @@ import { IconSelectorComponent } from '../icon-selector/icon-selector.component'
 export class TagPaneComponent implements OnInit {
   tags: any[] = [];
   edit = false;
+  selectedValue = "";
 
   constructor(private http: HttpClient, public dialog: MatDialog) { }
 
-  get_tags() {
+  clearTags() {
+    this.selectedValue = "";
+    this.tags = [];
+  }
+
+  getTags() {
     this.http.get<any[]>(
       '/get_tags').subscribe(
         resp => {
@@ -23,7 +29,7 @@ export class TagPaneComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.get_tags();
+    this.getTags();
   }
 
   startEdit() {
@@ -31,7 +37,7 @@ export class TagPaneComponent implements OnInit {
   }
 
   removeTag(i) {
-    this.tags.splice( i, 1);
+    this.tags.splice(i, 1);
   }
 
   newTag() {
@@ -40,19 +46,19 @@ export class TagPaneComponent implements OnInit {
 
   saveTags() {
     var new_tags = this.tags;
-    this.tags = [];
+    this.clearTags();
     this.edit = false;
     this.http.post(
       '/set_tags', new_tags).subscribe(
         resp => {
-	    this.get_tags();
+	    this.getTags();
         });
   }
 
   cancelEdit() {
-    this.tags = [];
+    this.clearTags();
     this.edit = false;
-    this.get_tags();
+    this.getTags();
   }
 
   selectIcon(i) {

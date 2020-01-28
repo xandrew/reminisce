@@ -1,5 +1,5 @@
 <div *ngIf="!edit">
-  <mat-button-toggle-group multiple vertical [(value)] = "selectedValue">
+  <mat-button-toggle-group multiple vertical [(ngModel)] = "selectedValue">
     <mat-button-toggle *ngFor="let tag of tags" [value]='tag.tag_id' [aria-label]='tag.description'>
       <div class="tag-label">
 	<mat-icon>{{tag.icon}}</mat-icon>
