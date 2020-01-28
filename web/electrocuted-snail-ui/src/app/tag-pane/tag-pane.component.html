@@ -1,0 +1,71 @@
+<div *ngIf="!edit">
+  <mat-button-toggle-group *ngIf="tags.length > 0" multiple vertical [(ngModel)] = "selectedValue">
+    <mat-button-toggle *ngFor="let tag of tags" [value]='tag.tag_id' [aria-label]='tag.description'>
+      <div class="tag-label">
+	<mat-icon>{{tag.icon}}</mat-icon>
+	<span>{{tag.description}}</span>
+	<div></div>
+      </div>
+  </mat-button-toggle>
+  </mat-button-toggle-group>
+  <input type="hidden" name="tags" [value]="selectedValue">
+  <button type="button" mat-raised-button color="accent" (click)="startEdit()">
+    Edit tags
+  </button>
+</div>
+
+<div *ngIf="edit">
+  <div *ngFor="let formGroup of formArray.controls; index as i; last as isLast" class="edit-item">
+    <div class='id-and-icon'>
+      <mat-form-field>
+	<input
+	  matInput
+	  placeholder="Tag id"
+	  [formControl]="formGroup.controls['tag_id']"
+	  required>
+	<mat-error *ngIf="formGroup.controls['tag_id'].invalid">{{getErrorMessage(formGroup.controls['tag_id'].errors)}}</mat-error>
+      </mat-form-field>
+      <div class='icon-with-label'>
+	<span class="mat-small icon-label">
+	  Icon
+	</span>
+	<button type="button" mat-icon-button color="accent" (click)="selectIcon(i)">
+	  <mat-icon>{{formGroup.controls['icon'].value}}</mat-icon>
+	</button>
+      </div>
+    </div>
+    <div class='desc-and-remove-button'>
+      <mat-form-field class='desc-field'>
+	<input
+	  matInput
+	  placeholder="Description"
+	  [formControl]="formGroup.controls['description']">
+      </mat-form-field>
+      <button type="button" mat-icon-button color="primary" (click)="removeTag(i)">
+	<mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <span class="mat-caption">
+      Search term for
+      <a href="https://support.google.com/mail/answer/6579?hl=en"
+	 target="_blank">mail filter</a>:
+    </span>
+    <span class="mat-caption" style="white-space: nowrap;">
+      <b>electrocuted-{{formGroup.controls['tag_id'].value}}-snail</b>
+    </span>
+    <mat-divider></mat-divider>
+  </div>
+  <div class="buttons">
+    <span>
+      <button type="button" mat-raised-button color="primary" (click)="saveTags()" [disabled]="formArray.invalid">
+	Save
+      </button>
+      <button type="button" mat-raised-button color="accent" (click)="cancelEdit()">
+	Cancel
+      </button>
+    </span>
+    <button *ngIf="(tags.length == 0) || tags[tags.length - 1].tag_id" type="button" mat-icon-button color="primary" (click)="newTag()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</div>

@@ -3,7 +3,7 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileType, FileName, Disposition, ContentId
 
-def send(email, notes, files, ocr_texts, folder, id):
+def send(email, notes, files, ocr_texts, folder, id, tags):
     html_content = f'Document ID {id} electrocuted!<BR>Find originals attached.<BR>'
     if folder:
         html_content += f'Hard copy was stored in folder {folder} with label {id}.<BR>'
@@ -12,6 +12,10 @@ def send(email, notes, files, ocr_texts, folder, id):
         
     if notes:
         html_content += f'Notes:<BR>\n{notes}<BR>\n'
+
+    if tags:
+        tags_string = "<BR>\n".join([f'electrocuted-{tag}-snail' for tag in tags])
+        html_content += f'Tags:<BR>\n{tags_string}<BR>\n'
 
     if ocr_texts:
         html_content += 'OCRed texts for searchability:<BR>'
