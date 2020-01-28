@@ -152,7 +152,7 @@ def electrocute():
     tags = []
     if request.form['tags']:
         tags = request.form['tags'].split(',')
-    #mail.send(current_user.email, request.form['notes'], non_empty, ocrs, request.form['folder'], request.form['docId'], tags)
+    mail.send(current_user.email, request.form['notes'], non_empty, ocrs, request.form['folder'], request.form['docId'], tags)
     return json.dumps({})
 
 

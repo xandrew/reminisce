@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -10,8 +10,17 @@ import { IconSelectorComponent } from '../icon-selector/icon-selector.component'
   styleUrls: ['./tag-pane.component.scss']
 })
 export class TagPaneComponent implements OnInit {
+  @Output() editChange = new EventEmitter<boolean>();
+
   tags: any[] = [];
-  edit = false;
+  private _edit = false;
+  get edit(): boolean {
+    return this._edit;
+  }
+  set edit(val: boolean) {
+    this._edit = val;
+    this.editChange.emit(val);
+  }
   selectedValue = "";
   formArray = new FormArray([]);
 

@@ -93,6 +93,8 @@ export class AppComponent implements OnInit {
       });
   }
 
+  tagPaneEditing = false;
+
   constructor(private http: HttpClient) {
   }
 
@@ -154,6 +156,10 @@ export class AppComponent implements OnInit {
       resp => {
         this.docId = resp['id'];
       });
+  }
+
+  tagPaneEditChange(val: boolean) {
+    this.tagPaneEditing = val;
   }
 
   ngOnInit() {
