@@ -1,13 +1,13 @@
 v 1.0
 Nicer email layout
-Use angular for non logged in users as well for UI consistency (delete intro.html and the static directory) Login enforcement from angular.
-Somehow we should indicate on the UI why the user cannot progress.
 Documentation.
 Correct optionals
 
 later
+Somehow we should indicate on the UI why the user cannot progress.
 Would be nice to include a folder creation animgif somehow.
 Bit of refactor. Break up main.py and app component.
 Handle ajax errors.
 app component reinitialization mess
 summary in electrocute "step"
+OCR for other document types

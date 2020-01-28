@@ -18,6 +18,13 @@ h2 {
     padding: 15px 0;
 }
 
+.electrocute-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}    
+
 .notes-field {
     width: 300px;
 }

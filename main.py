@@ -85,7 +85,6 @@ class SnailUser:
 # ========== Login setup ===========================
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -109,10 +108,6 @@ def _on_signin(blueprint, token):
     us.save_to_db(db)
     login_user(us)
     
-@app.route('/login')
-def login():
-    return render_template('./intro.html')
-
 @app.route('/logout')
 def logout():
     logout_user()

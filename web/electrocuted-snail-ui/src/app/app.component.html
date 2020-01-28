@@ -30,7 +30,13 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 <div *ngIf='!successPage'>
-  <h2>Electrocute a new document</h2>
+  <div class='electrocute-header'>
+    <div></div>
+    <h2>Electrocute a new document</h2>
+    <a mat-icon-button href="/logout">
+      <mat-icon>exit_to_app</mat-icon>
+    </a>
+  </div>
   <form #f (ngSubmit)="sendRequest(f)">
     <input type="hidden" name="docId" [value]='docId'>
     <mat-vertical-stepper linear='true'>
