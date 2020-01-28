@@ -104,6 +104,7 @@ app.register_blueprint(google_blueprint, url_prefix='/auth')
 @oauth_authorized.connect
 def _on_signin(blueprint, token):
     user_json = google.get('oauth2/v1/userinfo').json()
+    print(user_json)
     us = SnailUser(user_json['email'], user_json.get('picture', ''))
     us.save_to_db(db)
     login_user(us)
@@ -121,7 +122,6 @@ def logout():
 # ============== Main endpoints ========================
 # Just redirects to where angular asserts are served from.
 @app.route('/')
-@login_required
 def root():
     return redirect('/ui')
 
@@ -130,7 +130,6 @@ def root():
 if not os.getenv('GAE_ENV', '').startswith('standard'):
     @app.route('/ui', defaults={'path': ''})
     @app.route('/ui/<path:path>')
-    @login_required
     def ui_proxy(path):
         resp = get(f'http://localhost:4200/ui/{path}', stream=True)
         return resp.raw.read(), resp.status_code, resp.headers.items()
@@ -255,6 +254,14 @@ def set_tags():
     transaction = db.transaction()
     replace_tags(transaction, tags_collection(current_user.email), request.json)
     return json.dumps({})
+
+# Login state endpoint
+@app.route('/login_state', methods=['GET'])
+def login_state():
+    if current_user.is_authenticated:
+        return json.dumps({'email': current_user.email})
+    else:
+        return json.dumps({})
 
 # ============= Boilerplate!!! ========================
 if __name__ == '__main__':

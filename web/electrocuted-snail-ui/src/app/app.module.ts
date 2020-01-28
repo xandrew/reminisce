@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { ScrollingModule } from '@angular/cdk/scrolling';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,6 +18,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -24,19 +27,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FileUploaderComponent } from './file-uploader/file-uploader.component';
 import { TagPaneComponent } from './tag-pane/tag-pane.component';
 import { IconSelectorComponent } from './icon-selector/icon-selector.component';
+import { DocsComponent } from './docs/docs.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FileUploaderComponent,
     TagPaneComponent,
-    IconSelectorComponent
+    IconSelectorComponent,
+    DocsComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    ScrollingModule,
     MatInputModule,
     MatFormFieldModule,
     MatButtonModule,
@@ -51,10 +57,12 @@ import { IconSelectorComponent } from './icon-selector/icon-selector.component';
     MatDividerModule,
     MatGridListModule,
     MatDialogModule,
+    MatCardModule,
     HttpClientModule
   ],
   entryComponents: [
-    IconSelectorComponent
+    IconSelectorComponent,
+    DocsComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

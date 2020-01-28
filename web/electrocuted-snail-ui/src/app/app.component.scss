@@ -9,6 +9,7 @@
     height: 100%;
     margin: auto;
     background: white;
+    overflow-y: auto;
 }
 
 h2 {
@@ -54,4 +55,15 @@ h2 {
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: center;
+}
+
+.centered-button-pane {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+}
+
+.non-logged-in p {
+    text-align: justify;
+    margin: 0 5px;
 }

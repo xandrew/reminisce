@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DocsComponent } from './docs/docs.component';
 
 class ElectrocuteResponse {
   here: string;
@@ -95,7 +97,7 @@ export class AppComponent implements OnInit {
 
   tagPaneEditing = false;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, public dialog: MatDialog) {
   }
 
   fileSelected() {
@@ -162,7 +164,26 @@ export class AppComponent implements OnInit {
     this.tagPaneEditing = val;
   }
 
+  loggedIn = false;
+  email: string;
+
   ngOnInit() {
     this.newElectrocution();
+    this.http.get('/login_state').subscribe(
+      resp => {
+        if ('email' in resp) {
+	  this.loggedIn = true;
+          this.email = resp['email'];
+	} else {
+	  this.loggedIn = false;
+	}
+      });
+  }
+
+  openDocs() {
+    const dialogRef = this.dialog.open(DocsComponent, {
+      width: '500px',
+      restoreFocus: false
+    });
   }
 }
