@@ -2,7 +2,7 @@
 </style>
 
 <div class='margin-background mat-app-background'>
-<div class='main non-logged-in' *ngIf="!loggedIn">
+<div class='main non-logged-in' *ngIf="!loggedIn && !electrocutionInProgress">
   <h2><span class="mat-h3">Welcome to</span><br>Electrocuted Snail</h2>
   <p>Convert all your snail mail and other paper documents into emails!</p>
   <div class="centered-button-pane">
@@ -20,14 +20,14 @@
     <div class="mat-caption">I promise it's short...</div>
   </div>
 </div>
+<div *ngIf='electrocutionInProgress' class='progress-overlay'>
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
 <div class='main' *ngIf="loggedIn">
 <div *ngIf='successPage' class='success-page'>
   <h2>Electrocution successful!</h2>
   <button type="button" mat-raised-button color="primary" (click)='newElectrocution()'>Electrocute another one!</button>
   <div class="mat-caption">Or just close this tab if you are done.</div>
-</div>
-<div *ngIf='electrocutionInProgress' class='progress-overlay'>
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 <div *ngIf='!successPage'>
   <div class='electrocute-header'>

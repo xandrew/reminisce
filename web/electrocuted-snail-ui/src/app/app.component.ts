@@ -169,8 +169,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.newElectrocution();
+    this.electrocutionInProgress = true;
     this.http.get('/login_state').subscribe(
       resp => {
+          this.electrocutionInProgress = false;
         if ('email' in resp) {
 	  this.loggedIn = true;
           this.email = resp['email'];
