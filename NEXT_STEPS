@@ -1,4 +1,5 @@
 v 1.0
+Don't show non-logged in while waiting.
 
 later
 Somehow we should indicate on the UI why the user cannot progress.
@@ -8,3 +9,18 @@ Handle ajax errors.
 app component reinitialization mess
 summary in electrocute "step"
 OCR for pdf
+
+Judit feedback
+Better logout icon
+More space on first page?
+Iphone sucks
+Description fall back to id?
+Edit state preserved in tag editor?
+Tag selection unclear
+4 ev
+I'm done with creating the folder
+Folder is full tul prominens
+Error message too long in tag id
+Edit tags button should be yellow
+Tag editor should be a modal
+"Electrocute new document" should be centralized
