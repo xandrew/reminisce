@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DocsComponent } from './docs/docs.component';
+import { TagPaneComponent } from './tag-pane/tag-pane.component';
+import { TagEditorComponent } from './tag-editor/tag-editor.component';
 
 class ElectrocuteResponse {
   here: string;
@@ -95,7 +97,7 @@ export class AppComponent implements OnInit {
       });
   }
 
-  tagPaneEditing = false;
+  @ViewChild(TagPaneComponent, {static: false}) tagPane !: TagPaneComponent;
 
   constructor(private http: HttpClient, public dialog: MatDialog) {
   }
@@ -160,10 +162,6 @@ export class AppComponent implements OnInit {
       });
   }
 
-  tagPaneEditChange(val: boolean) {
-    this.tagPaneEditing = val;
-  }
-
   loggedIn = false;
   email: string;
 
@@ -190,6 +188,20 @@ export class AppComponent implements OnInit {
       maxHeight: '100vh',
       restoreFocus: false,
       autoFocus: false
+    });
+  }
+
+  openTagEditor() {
+    const dialogRef = this.dialog.open(TagEditorComponent, {
+      width: '100vw',
+      maxWidth: '600px',
+      restoreFocus: false,
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.tagPane.getTags();
+      }
     });
   }
 }

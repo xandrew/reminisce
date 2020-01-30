@@ -64,6 +64,16 @@ class SnailUser:
             ref.update(initial_data)
         else:
             ref.set(initial_data)
+            transaction = db.transaction()
+            replace_tags(
+                transaction,
+                tags_collection(self.email),
+                [{'tag_id': 'bill',
+                  'description': 'Bill',
+                  'icon': 'attach_money'},
+                 {'tag_id': 'warranty',
+                  'description': 'Warranty',
+                  'icon': 'card_giftcard'}])
     
     @property
     def is_active(self):

@@ -80,3 +80,23 @@ h3 {
     margin: 0 5px;
     text-align: center;
 }
+
+.tag-pane-header {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: -16px;
+}    
+
+.tune-pane {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-end;
+}
+
+.tune-pane div {
+    margin-top: -10px;
+    padding-right: 8px;
+}

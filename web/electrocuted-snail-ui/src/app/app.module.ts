@@ -28,6 +28,7 @@ import { FileUploaderComponent } from './file-uploader/file-uploader.component';
 import { TagPaneComponent } from './tag-pane/tag-pane.component';
 import { IconSelectorComponent } from './icon-selector/icon-selector.component';
 import { DocsComponent } from './docs/docs.component';
+import { TagEditorComponent } from './tag-editor/tag-editor.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { DocsComponent } from './docs/docs.component';
     FileUploaderComponent,
     TagPaneComponent,
     IconSelectorComponent,
-    DocsComponent
+    DocsComponent,
+    TagEditorComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +64,8 @@ import { DocsComponent } from './docs/docs.component';
   ],
   entryComponents: [
     IconSelectorComponent,
-    DocsComponent
+    DocsComponent,
+    TagEditorComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

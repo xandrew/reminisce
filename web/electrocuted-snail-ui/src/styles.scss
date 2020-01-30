@@ -5,10 +5,14 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-mat-dialog-content.mat-dialog-content {
+/*mat-dialog-content.mat-dialog-content {
     max-height: unset;
-}
+}*/
 
 p {
     text-align: justify;
+}
+
+.mat-step-label {
+    width: 100%;
 }

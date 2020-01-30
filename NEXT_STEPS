@@ -1,5 +1,4 @@
 v 1.0
-Don't show non-logged in while waiting.
 
 later
 Somehow we should indicate on the UI why the user cannot progress.
@@ -24,3 +23,4 @@ Error message too long in tag id
 Edit tags button should be yellow
 Tag editor should be a modal
 "Electrocute new document" should be centralized
+Icon selector as modal in modal sucks
