@@ -133,6 +133,17 @@ if not os.getenv('GAE_ENV', '').startswith('standard'):
 # ============== Ajax endpoints =======================
 
 # Endpoint for electrocuting a new document.
+
+supported_image_types = set([
+    'image/jpeg',
+    'image/tiff',
+    'image/bmp',
+    'image/gif',
+    'image/png',
+    'image/vnd.microsoft.icon',
+    'image/webp',
+    'application/pdf'])
+
 @app.route('/electrocute', methods=['POST'])
 @login_required
 def electrocute():
@@ -141,7 +152,8 @@ def electrocute():
                  if file.filename]
     ocrs = [do_OCR(image_data)
             for image_file,image_data in non_empty
-            if image_file.content_type == 'image/jpeg']
+            if image_file.content_type in supported_image_types]
+    ocrs = [ocr for ocr in ocrs if ocr]
     print(request.form);
     tags = []
     if request.form['tags']:

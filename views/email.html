@@ -1,0 +1,32 @@
+<html>
+  <h4>Document ID {{id}} electrocuted!</h4>
+  <p>Find originals attached.</p>
+
+  {% if folder %}
+    <p>Hard copy was stored in folder {{folder}} with label {{id}}.</p>
+  {% else %}
+    <p>Hard copy of the document was discarded.</p>
+  {% endif %}
+
+  {% if notes %}
+    <h5>Notes:</h5>
+    <p>{{notes}}</p>
+  {% endif %}
+
+  {% if tags %}
+    <h5>Tags:</h5>
+    <ul>
+    {% for tag in tags %}
+      <li>electrocuted-{{tag}}-snail</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+
+
+  {% if ocr_texts %}
+    <h5>OCRed text for searchability:</h5>
+    {% for ocr_text in ocr_texts %}
+      <p>{{ocr_text}}</p>
+    {% endfor %}
+  {% endif %}
+</html>
