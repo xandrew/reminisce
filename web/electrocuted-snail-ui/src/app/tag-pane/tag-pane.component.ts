@@ -94,12 +94,18 @@ export class TagPaneComponent implements OnInit {
 
   selectIcon(i) {
     const dialogRef = this.dialog.open(IconSelectorComponent, {
-      width: '500px',
-      restoreFocus: false
+      width: '100vw',
+      maxWidth: '500px',
+      maxHeight: '85vh',
+      restoreFocus: false,
+      autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      (<FormGroup>this.formArray.controls[i]).controls['icon'].setValue(result);
+      if (result) {
+        var control = (<FormGroup>this.formArray.controls[i]).controls['icon'];
+        control.setValue(result);
+      }
     });
   }
 

@@ -85,7 +85,6 @@ class SnailUser:
 # ========== Login setup ===========================
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -104,14 +103,11 @@ app.register_blueprint(google_blueprint, url_prefix='/auth')
 @oauth_authorized.connect
 def _on_signin(blueprint, token):
     user_json = google.get('oauth2/v1/userinfo').json()
+    print(user_json)
     us = SnailUser(user_json['email'], user_json.get('picture', ''))
     us.save_to_db(db)
     login_user(us)
     
-@app.route('/login')
-def login():
-    return render_template('./intro.html')
-
 @app.route('/logout')
 def logout():
     logout_user()
@@ -121,7 +117,6 @@ def logout():
 # ============== Main endpoints ========================
 # Just redirects to where angular asserts are served from.
 @app.route('/')
-@login_required
 def root():
     return redirect('/ui')
 
@@ -130,7 +125,6 @@ def root():
 if not os.getenv('GAE_ENV', '').startswith('standard'):
     @app.route('/ui', defaults={'path': ''})
     @app.route('/ui/<path:path>')
-    @login_required
     def ui_proxy(path):
         resp = get(f'http://localhost:4200/ui/{path}', stream=True)
         return resp.raw.read(), resp.status_code, resp.headers.items()
@@ -139,6 +133,17 @@ if not os.getenv('GAE_ENV', '').startswith('standard'):
 # ============== Ajax endpoints =======================
 
 # Endpoint for electrocuting a new document.
+
+supported_image_types = set([
+    'image/jpeg',
+    'image/tiff',
+    'image/bmp',
+    'image/gif',
+    'image/png',
+    'image/vnd.microsoft.icon',
+    'image/webp',
+    'application/pdf'])
+
 @app.route('/electrocute', methods=['POST'])
 @login_required
 def electrocute():
@@ -147,7 +152,8 @@ def electrocute():
                  if file.filename]
     ocrs = [do_OCR(image_data)
             for image_file,image_data in non_empty
-            if image_file.content_type == 'image/jpeg']
+            if image_file.content_type in supported_image_types]
+    ocrs = [ocr for ocr in ocrs if ocr]
     print(request.form);
     tags = []
     if request.form['tags']:
@@ -255,6 +261,14 @@ def set_tags():
     transaction = db.transaction()
     replace_tags(transaction, tags_collection(current_user.email), request.json)
     return json.dumps({})
+
+# Login state endpoint
+@app.route('/login_state', methods=['GET'])
+def login_state():
+    if current_user.is_authenticated:
+        return json.dumps({'email': current_user.email})
+    else:
+        return json.dumps({})
 
 # ============= Boilerplate!!! ========================
 if __name__ == '__main__':

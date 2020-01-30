@@ -1,3 +1,5 @@
+@import '~@angular/material/theming';
+
 .tag-label {
     display: flex;
     flex-flow: row nowrap;
@@ -16,7 +18,7 @@ mat-button-toggle span {
 }
 
 mat-button-toggle-group {
-    width: 300px;
+    width: 100%;
 }
 
 .icon-label {
@@ -31,7 +33,7 @@ mat-button-toggle-group {
 }
 
 .id-and-icon {
-    width: 300px;
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -39,19 +41,16 @@ mat-button-toggle-group {
 }
 
 mat-form-field {
-    width: 260px;
+    flex: 1 0 auto;
+    width: 0px;
 }
 
 .id-and-icon button {
     margin-top: -10px;
 }
 
-.desc-field {
-    width: 300px;
-}
-
 .desc-and-remove-button {
-    width: 300px;
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -63,8 +62,30 @@ mat-divider {
 }
 
 .buttons {
-    width: 300px;
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
+}
+
+.edit-pane {
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.edit-pane mat-card {
+    margin: 5px 0;
+}
+
+.edit-button {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    align-items: center;
+}
+.mat-vertical-content-container .mat-vertical-stepper-content {
+    overflow: visible;
 }

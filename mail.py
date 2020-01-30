@@ -2,35 +2,22 @@ import base64
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileType, FileName, Disposition, ContentId
+from flask import render_template
 
 def send(email, notes, files, ocr_texts, folder, id, tags):
-    html_content = f'Document ID {id} electrocuted!<BR>Find originals attached.<BR>'
-    if folder:
-        html_content += f'Hard copy was stored in folder {folder} with label {id}.<BR>'
-    else:
-        html_content += f'Hard copy of the document was discarded.<BR>'
-        
-    if notes:
-        html_content += f'Notes:<BR>\n{notes}<BR>\n'
-
-    if tags:
-        tags_string = "<BR>\n".join([f'electrocuted-{tag}-snail' for tag in tags])
-        html_content += f'Tags:<BR>\n{tags_string}<BR>\n'
-
-    if ocr_texts:
-        html_content += 'OCRed texts for searchability:<BR>'
-    for ocr_text in ocr_texts:
-        html_content += ocr_text + ' <BR>'
+    html_content = render_template('./email.html', id=id, folder=folder, ocr_texts=ocr_texts, tags=tags, notes=notes)
     message = Mail(
         from_email='andras.nemeth@electrocuted-snail.com',
         to_emails=email,
         subject=f'Electrocuted document {id}',
         html_content=html_content)
-    message.attachment = [Attachment(FileContent(base64.b64encode(data).decode("utf-8")),
-                                     FileName(file.filename),
-                                     FileType(file.content_type),
-                                     Disposition('attachment'),
-                                     ContentId('Attached File')) for (file, data) in files]
+    message.attachment = [
+        Attachment(FileContent(base64.b64encode(data).decode("utf-8")),
+                   FileName(file.filename),
+                   FileType(file.content_type),
+                   Disposition('attachment'),
+                   ContentId('Attached File'))
+        for (file, data) in files]
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(message)

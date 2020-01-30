@@ -1,5 +1,5 @@
-<div *ngIf="!edit">
-  <mat-button-toggle-group *ngIf="tags.length > 0" multiple vertical [(ngModel)] = "selectedValue">
+<div *ngIf="!edit" class="tag-select-pane">
+  <mat-button-toggle-group *ngIf="tags.length > 0" multiple vertical [(ngModel)] = "selectedValue" color="primary">
     <mat-button-toggle *ngFor="let tag of tags" [value]='tag.tag_id' [aria-label]='tag.description'>
       <div class="tag-label">
 	<mat-icon>{{tag.icon}}</mat-icon>
@@ -8,14 +8,16 @@
       </div>
   </mat-button-toggle>
   </mat-button-toggle-group>
+  <div class="edit-button">
+    <button type="button" mat-icon-button color="warn" (click)="startEdit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
   <input type="hidden" name="tags" [value]="selectedValue">
-  <button type="button" mat-raised-button color="accent" (click)="startEdit()">
-    Edit tags
-  </button>
 </div>
 
-<div *ngIf="edit">
-  <div *ngFor="let formGroup of formArray.controls; index as i; last as isLast" class="edit-item">
+<div *ngIf="edit" class="edit-pane">
+  <mat-card *ngFor="let formGroup of formArray.controls; index as i; last as isLast" class="edit-item">
     <div class='id-and-icon'>
       <mat-form-field>
 	<input
@@ -49,18 +51,17 @@
       Search term for
       <a href="https://support.google.com/mail/answer/6579?hl=en"
 	 target="_blank">mail filter</a>:
-    </span>
-    <span class="mat-caption" style="white-space: nowrap;">
+    </span><br>
+    <span class="mat-caption">
       <b>electrocuted-{{formGroup.controls['tag_id'].value}}-snail</b>
     </span>
-    <mat-divider></mat-divider>
-  </div>
+  </mat-card>
   <div class="buttons">
     <span>
       <button type="button" mat-raised-button color="primary" (click)="saveTags()" [disabled]="formArray.invalid">
 	Save
       </button>
-      <button type="button" mat-raised-button color="accent" (click)="cancelEdit()">
+      <button type="button" mat-raised-button (click)="cancelEdit()">
 	Cancel
       </button>
     </span>
