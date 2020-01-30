@@ -13,7 +13,7 @@ source sendgrid.env
 
 sed "s/__SENDGRID_SECRET__/$SENDGRID_API_KEY/g" app.yaml.shadow > app.yaml
 
-gcloud app deploy || true
+gcloud app deploy --quiet || true
 
 rm app.yaml
 rm -rf prod_ui
