@@ -1,10 +1,9 @@
 v 1.0
 Nicer email layout
-Documentation.
 Correct optionals
+Somehow we should indicate on the UI why the user cannot progress.
 
 later
-Somehow we should indicate on the UI why the user cannot progress.
 Would be nice to include a folder creation animgif somehow.
 Bit of refactor. Break up main.py and app component.
 Handle ajax errors.

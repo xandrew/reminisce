@@ -1,0 +1,14 @@
+.mat-dialog-title {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mat-dialog-title h4 {
+    margin: 0px;
+}
+
+mat-dialog-content {
+    overflow: auto;
+}

@@ -4,6 +4,12 @@ input[type=file] {
     width:0;
 }
 
+.uploader-item {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
 mat-form-field {
-    width: 260px;
+    width: 0px;
+    flex: 1 0 auto;
 }

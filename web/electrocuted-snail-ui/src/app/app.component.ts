@@ -182,8 +182,12 @@ export class AppComponent implements OnInit {
 
   openDocs() {
     const dialogRef = this.dialog.open(DocsComponent, {
-      width: '500px',
-      restoreFocus: false
+      width: '100vw',
+      maxWidth: '100vw',
+      height: '100vh',
+      maxHeight: '100vh',
+      restoreFocus: false,
+      autoFocus: false
     });
   }
 }

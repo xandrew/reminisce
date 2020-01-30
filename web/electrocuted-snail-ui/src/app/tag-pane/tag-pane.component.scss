@@ -18,7 +18,7 @@ mat-button-toggle span {
 }
 
 mat-button-toggle-group {
-    width: 300px;
+    width: 100%;
 }
 
 .icon-label {
@@ -33,7 +33,7 @@ mat-button-toggle-group {
 }
 
 .id-and-icon {
-    width: 270px;
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -41,19 +41,16 @@ mat-button-toggle-group {
 }
 
 mat-form-field {
-    width: 230px;
+    flex: 1 0 auto;
+    width: 0px;
 }
 
 .id-and-icon button {
     margin-top: -10px;
 }
 
-.desc-field {
-    width: 300px;
-}
-
 .desc-and-remove-button {
-    width: 270px;
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -65,14 +62,14 @@ mat-divider {
 }
 
 .buttons {
-    width: 300px;
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
 }
 
 .edit-pane {
-    width: 300px;
+    width: 100%;
     display: flex;
     flex-flow: column nowrap;
 }
@@ -83,7 +80,7 @@ mat-divider {
 
 .edit-button {
     margin-top: 10px;
-    width: 316px;
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-end;

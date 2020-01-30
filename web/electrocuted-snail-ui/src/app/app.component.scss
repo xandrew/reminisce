@@ -5,7 +5,8 @@
 }
 
 .main {
-    width: 400px;
+    min-width: 320px;
+    max-width: 600px;
     height: 100%;
     margin: auto;
     background: white;
@@ -13,6 +14,11 @@
 }
 
 h2 {
+    text-align: center;
+    margin: 0 0;
+    padding: 15px 0;
+}
+h3 {
     text-align: center;
     margin: 0 0;
     padding: 15px 0;
@@ -26,7 +32,7 @@ h2 {
 }    
 
 .notes-field {
-    width: 300px;
+    width: 100%;
 }
 
 .harddiv {
@@ -71,6 +77,5 @@ h2 {
 }
 
 .non-logged-in p {
-    text-align: justify;
     margin: 0 5px;
 }
