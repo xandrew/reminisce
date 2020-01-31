@@ -1,6 +1,19 @@
+.docs {
+    display: flex;
+    flex-flow: column nowrap;
+    height: 100%;
+}
 .docs-header {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
+    padding: 5px;
+}
+
+.docs-text {
+    overflow: auto;
+    padding: 10px;
+    height: 0px;
+    flex: 1 0 auto;
 }

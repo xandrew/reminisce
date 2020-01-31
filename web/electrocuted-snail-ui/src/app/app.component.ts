@@ -180,15 +180,17 @@ export class AppComponent implements OnInit {
       });
   }
 
+  docsOpen = false;
   openDocs() {
-    const dialogRef = this.dialog.open(DocsComponent, {
+    this.docsOpen = true;
+    /*const dialogRef = this.dialog.open(DocsComponent, {
       width: '100vw',
       maxWidth: '100vw',
       height: '100vh',
       maxHeight: '100vh',
       restoreFocus: false,
       autoFocus: false
-    });
+    });*/
   }
 
   openTagEditor() {
@@ -203,5 +205,15 @@ export class AppComponent implements OnInit {
         this.tagPane.getTags();
       }
     });
+  }
+
+  tagEditButtonVisible = false;
+
+  stepChange(e) {
+    if (e.selectedIndex == 1) {
+      this.tagEditButtonVisible = true;
+    } else {
+      this.tagEditButtonVisible = false;
+    }
   }
 }

@@ -2,22 +2,29 @@
 </style>
 
 <div class='margin-background mat-app-background'>
-<div class='main non-logged-in' *ngIf="!loggedIn && !electrocutionInProgress">
-  <h2><span class="mat-h3">Welcome to</span><br>Electrocuted Snail</h2>
-  <p>Convert all your snail mail and other paper documents into emails!</p>
-  <div class="centered-button-pane">
-    <a mat-raised-button color="primary" href="/auth/google">
-      Start with a Google Login now!
-    </a>
-  </div>
-  <p>Not sure what I'm talking about?</p>
-  <div class="centered-button-pane">
-    <button mat-raised-button type="button" color="primary" (click)="openDocs()">
-      Then read the Docs.
-    </button>
-  </div>
-  <div class="centered-button-pane">
-    <div class="mat-caption">I promise it's short...</div>
+<div class='docs' *ngIf="docsOpen">
+    <app-docs (close)="docsOpen = false"></app-docs>
+</div>
+<div class="main non-logged-in" *ngIf="!loggedIn && !electrocutionInProgress">
+  <div class="non-logged-in-sub">
+    <h2><span class="mat-h3">Welcome to</span><br>Electrocuted Snail</h2>
+    <p>Convert all your snail mail and other paper documents into emails!</p>
+    <div class="centered-button-pane">
+      <a mat-raised-button color="primary" href="/auth/google">
+	Start with a Google Login now!
+      </a>
+    </div>
+    <p>Not sure what I'm talking about?</p>
+    <div>
+      <div class="centered-button-pane">
+	<button mat-raised-button type="button" color="primary" (click)="openDocs()">
+	  Then read the Docs.
+	</button>
+      </div>
+      <div class="centered-button-pane">
+	<div class="mat-caption">I promise it's short...</div>
+      </div>
+    </div>
   </div>
 </div>
 <div *ngIf='electrocutionInProgress' class='progress-overlay'>
@@ -31,20 +38,18 @@
 </div>
 <div *ngIf='!successPage'>
   <div class='electrocute-header'>
+    <button mat-icon-button type="button" (click)="openDocs()">
+      <mat-icon>live_help</mat-icon>
+    </button>
     <div></div>
     <h2>Electrocute a new document</h2>
-    <div>
-      <button mat-icon-button type="button" (click)="openDocs()">
-	<mat-icon>live_help</mat-icon>
-      </button>
-      <a mat-icon-button href="/logout">
-	<mat-icon>exit_to_app</mat-icon>
-      </a>
-    </div>
+    <a mat-icon-button href="/logout">
+      <mat-icon>exit_to_app</mat-icon>
+    </a>
   </div>
   <form #f (ngSubmit)="sendRequest(f)">
     <input type="hidden" name="docId" [value]='docId'>
-    <mat-vertical-stepper linear='true'>
+    <mat-vertical-stepper linear='true' (selectionChange)="stepChange($event)">
       <mat-step optional [completed]='ids.length > 1' label='Scan/photo your document'>
 	<app-file-uploader *ngFor="let id of ids" [id]="id" (selected)='fileSelected()' (remove)='removeId(id)' (file)='gotFile(id, $event)'></app-file-uploader>
       </mat-step>
@@ -52,16 +57,18 @@
 	<ng-template matStepLabel>
 	  <div class="tag-pane-header">
 	    <div class="mat-step-text-label">Add tags</div>
-	    <div class="tune-pane">
 	    <button
-	      mat-icon-button
+	      [hidden]="!tagEditButtonVisible"
+	      mat-button
 	      type="button"
 	      (click)="openTagEditor()"
+	      class="customize-button"
 	      color="accent">
-	      <mat-icon>tune</mat-icon>
+	      <div class="tune-pane">
+		<mat-icon>tune</mat-icon>
+		<div class="mat-caption mat-accent">Customize tags</div>
+	      </div>
 	    </button>
-	    <div class="mat-caption">Configure tags</div>
-	    </div>
 	  </div>
 	</ng-template>
 	<app-tag-pane></app-tag-pane>
@@ -94,9 +101,9 @@
 	      <mat-option value="-1">ethernity</mat-option>
 	    </mat-select>
 	  </mat-form-field>
-	  <div *ngIf='folderLabel'>
+	  <div *ngIf="folderLabel">
 	    <p>Please label your hard copy with &quot;<b>{{docId}}</b>&quot; and put it in the folder labeled &quot;<b>{{folderLabel}}</b>&quot;!</p>
-	    <button type="button" mat-raised-button color="accent" (click)='folderFull()'>Or, click here if that folder is full!</button>
+	    <button type="button" mat-button (click)="folderFull()" class="mat-caption">Or, click here if that folder is full!</button>
 	  </div>
 	  <div *ngIf='needFolderFor'>
 	    <p *ngIf='firstFolder'>There is no physical folder for this expiry yet, please create one!</p>

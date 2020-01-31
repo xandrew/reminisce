@@ -69,7 +69,7 @@ export class TagEditorComponent implements OnInit {
       return 'Tag id is required!';
     }
     if (e['invalid-character']) {
-      return 'You can only use numbers, letters and dash!';
+      return 'Only use numbers, letters and dash!';
     }
     return 'Unknown error - this shouldn\'t happen.';
   }

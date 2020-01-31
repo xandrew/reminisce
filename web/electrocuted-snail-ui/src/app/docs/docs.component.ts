@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-docs',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./docs.component.scss']
 })
 export class DocsComponent implements OnInit {
+  @Output() close = new EventEmitter();
 
   constructor() { }
 

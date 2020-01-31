@@ -64,7 +64,6 @@ import { TagEditorComponent } from './tag-editor/tag-editor.component';
   ],
   entryComponents: [
     IconSelectorComponent,
-    DocsComponent,
     TagEditorComponent
   ],
   providers: [],

@@ -3,7 +3,7 @@
     <mat-button-toggle *ngFor="let tag of tags" [value]='tag.tag_id' [aria-label]='tag.description'>
       <div class="tag-label">
 	<mat-icon>{{tag.icon}}</mat-icon>
-	<span>{{tag.description}}</span>
+	<span>{{tag.description || tag.tag_id}}</span>
 	<div></div>
       </div>
   </mat-button-toggle>
