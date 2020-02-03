@@ -4,17 +4,13 @@
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .tag-label mat-icon {
-    padding-right: 4px;
+    padding-right: 12px;
     padding-top: 10px;
     padding-bottom: 10px;
-}
-
-mat-button-toggle span {
-    margin: auto;
 }
 
 mat-button-toggle-group {

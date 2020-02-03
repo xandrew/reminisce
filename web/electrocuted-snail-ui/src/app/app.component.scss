@@ -66,8 +66,13 @@ h3 {
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
+    height: 350px;
+}
+
+.success-page p {
+    padding: 0 10px;
 }
 
 .centered-button-pane {
