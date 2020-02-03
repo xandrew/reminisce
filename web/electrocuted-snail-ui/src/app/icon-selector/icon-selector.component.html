@@ -3,14 +3,12 @@
   <button mat-button mat-dialog-close>Cancel</button>
 </div>
 <mat-dialog-content>
-  <mat-grid-list cols="15" rowHeight="40px">
+  <mat-grid-list cols="10" rowHeight="40px">
     <mat-grid-tile
       *ngFor="let icon of icons"
       colspan="1"
       rowspan="1">
-      <button type="button" [mat-dialog-close]="icon" mat-icon-button color="accent">
-	<mat-icon>{{icon}}</mat-icon>
-      </button>
+      <mat-icon [mat-dialog-close]="icon" color='accent'>{{icon}}</mat-icon>
     </mat-grid-tile>
   </mat-grid-list>
 </mat-dialog-content>

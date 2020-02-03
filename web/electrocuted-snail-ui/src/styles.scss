@@ -1,14 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
-
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-mat-dialog-content.mat-dialog-content {
+/*mat-dialog-content.mat-dialog-content {
     max-height: unset;
-}
+}*/
 
 p {
     text-align: justify;
+}
+
+.mat-step-label {
+    width: 100%;
 }

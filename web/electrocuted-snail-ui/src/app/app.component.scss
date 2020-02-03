@@ -66,8 +66,13 @@ h3 {
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
+    height: 350px;
+}
+
+.success-page p {
+    padding: 0 10px;
 }
 
 .centered-button-pane {
@@ -76,6 +81,51 @@ h3 {
     justify-content: center;
 }
 
-.non-logged-in p {
-    margin: 0 5px;
+.non-logged-in-sub {
+    text-align: center;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    height: 400px;
+}
+
+.non-logged-in-sub p {
+    padding: 0 10px;
+}
+
+.tag-pane-header {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: -16px;
+}    
+
+.tag-pane-header .mat-step-text-label {
+    padding-bottom: 10px;
+}
+
+.tune-pane {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-end;
+}
+
+.tune-pane div {
+    margin-top: -6px;
+}
+
+.tag-pane-header button[hidden]{
+    visibility: hidden;
+}
+
+.docs {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: white;
 }

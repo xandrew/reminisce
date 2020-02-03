@@ -4,88 +4,16 @@
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .tag-label mat-icon {
-    padding-right: 4px;
+    padding-right: 12px;
     padding-top: 10px;
     padding-bottom: 10px;
-}
-
-mat-button-toggle span {
-    margin: auto;
 }
 
 mat-button-toggle-group {
     width: 100%;
 }
 
-.icon-label {
-    color: rgba(0,0,0,.54);
-}
-
-.icon-with-label {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-.id-and-icon {
-    width: 100%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-}
-
-mat-form-field {
-    flex: 1 0 auto;
-    width: 0px;
-}
-
-.id-and-icon button {
-    margin-top: -10px;
-}
-
-.desc-and-remove-button {
-    width: 100%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-mat-divider {
-    margin-bottom: 6px;
-}
-
-.buttons {
-    width: 100%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-}
-
-.edit-pane {
-    width: 100%;
-    display: flex;
-    flex-flow: column nowrap;
-}
-
-.edit-pane mat-card {
-    margin: 5px 0;
-}
-
-.edit-button {
-    margin-top: 10px;
-    width: 100%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-end;
-    align-items: center;
-}
-.mat-vertical-content-container .mat-vertical-stepper-content {
-    overflow: visible;
-}

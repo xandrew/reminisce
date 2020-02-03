@@ -1,72 +1,13 @@
-<div *ngIf="!edit" class="tag-select-pane">
+<div class="tag-select-pane">
   <mat-button-toggle-group *ngIf="tags.length > 0" multiple vertical [(ngModel)] = "selectedValue" color="primary">
     <mat-button-toggle *ngFor="let tag of tags" [value]='tag.tag_id' [aria-label]='tag.description'>
       <div class="tag-label">
 	<mat-icon>{{tag.icon}}</mat-icon>
-	<span>{{tag.description}}</span>
+	<span>{{tag.description || tag.tag_id}}</span>
 	<div></div>
       </div>
   </mat-button-toggle>
   </mat-button-toggle-group>
-  <div class="edit-button">
-    <button type="button" mat-icon-button color="warn" (click)="startEdit()">
-      <mat-icon>edit</mat-icon>
-    </button>
-  </div>
   <input type="hidden" name="tags" [value]="selectedValue">
 </div>
 
-<div *ngIf="edit" class="edit-pane">
-  <mat-card *ngFor="let formGroup of formArray.controls; index as i; last as isLast" class="edit-item">
-    <div class='id-and-icon'>
-      <mat-form-field>
-	<input
-	  matInput
-	  placeholder="Tag id"
-	  [formControl]="formGroup.controls['tag_id']"
-	  required>
-	<mat-error *ngIf="formGroup.controls['tag_id'].invalid">{{getErrorMessage(formGroup.controls['tag_id'].errors)}}</mat-error>
-      </mat-form-field>
-      <div class='icon-with-label'>
-	<span class="mat-small icon-label">
-	  Icon
-	</span>
-	<button type="button" mat-icon-button color="accent" (click)="selectIcon(i)">
-	  <mat-icon>{{formGroup.controls['icon'].value}}</mat-icon>
-	</button>
-      </div>
-    </div>
-    <div class='desc-and-remove-button'>
-      <mat-form-field class='desc-field'>
-	<input
-	  matInput
-	  placeholder="Description"
-	  [formControl]="formGroup.controls['description']">
-      </mat-form-field>
-      <button type="button" mat-icon-button color="primary" (click)="removeTag(i)">
-	<mat-icon>delete</mat-icon>
-      </button>
-    </div>
-    <span class="mat-caption">
-      Search term for
-      <a href="https://support.google.com/mail/answer/6579?hl=en"
-	 target="_blank">mail filter</a>:
-    </span><br>
-    <span class="mat-caption">
-      <b>electrocuted-{{formGroup.controls['tag_id'].value}}-snail</b>
-    </span>
-  </mat-card>
-  <div class="buttons">
-    <span>
-      <button type="button" mat-raised-button color="primary" (click)="saveTags()" [disabled]="formArray.invalid">
-	Save
-      </button>
-      <button type="button" mat-raised-button (click)="cancelEdit()">
-	Cancel
-      </button>
-    </span>
-    <button *ngIf="(tags.length == 0) || tags[tags.length - 1].tag_id" type="button" mat-icon-button color="primary" (click)="newTag()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-</div>
