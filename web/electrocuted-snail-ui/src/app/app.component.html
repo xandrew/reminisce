@@ -52,7 +52,7 @@
   <form #f (ngSubmit)="sendRequest(f)">
     <input type="hidden" name="docId" [value]='docId'>
     <mat-vertical-stepper linear='true' (selectionChange)="stepChange($event)">
-      <mat-step optional [completed]='ids.length > 1' label='Scan/photo your document'>
+      <mat-step [completed]='ids.length > 1' label='Scan/photo your document'>
 	<app-file-uploader *ngFor="let id of ids" [id]="id" (selected)='fileSelected()' (remove)='removeId(id)' (file)='gotFile(id, $event)'></app-file-uploader>
       </mat-step>
       <mat-step optional>
