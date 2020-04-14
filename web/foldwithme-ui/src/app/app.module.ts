@@ -2,10 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { DrawingCanvasComponent } from './drawing-canvas/drawing-canvas.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DrawingCanvasComponent
   ],
   imports: [
     BrowserModule
