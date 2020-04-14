@@ -1,10 +1,10 @@
-# electrocuted-snail
+FoldWithMe
 
-For development, create a python environment called snailenv in your home dir:
-python3 -m venv snailenv
+For development, create a python environment called foldenv in your home dir:
+python3 -m venv foldenv
 
 Activate and install dependencies:
-source ~/snailenv/bin/activate
+source ~/foldenv/bin/activate
 pip install -r requirements.txt
 
 To add a new dependency, install locally with pip into the above env and add

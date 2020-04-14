@@ -2,5 +2,5 @@
 
 set -xue
 
-cd web/electrocuted-snail-ui
+cd web/foldwithme-ui
 ng serve --baseHref=/ui/ --liveReload=false
