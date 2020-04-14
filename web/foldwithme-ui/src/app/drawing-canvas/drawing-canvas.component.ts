@@ -4,9 +4,10 @@
  */
 
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { fromEvent } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-drawing-canvas',
@@ -15,14 +16,17 @@ import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
 })
 export class DrawingCanvasComponent implements AfterViewInit {
 
-  constructor() { }
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
 
-  @ViewChild('canvas') public canvas: ElementRef;
+  @ViewChild('canvas', {static: false}) public canvas: ElementRef;
 
   @Input() public width = 400;
   @Input() public height = 400;
 
   private cx: CanvasRenderingContext2D;
+  private parent = '';
+  private prev_cropped: SafeUrl;
+  private revealed: SafeUrl[] = [];
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -76,5 +80,37 @@ export class DrawingCanvasComponent implements AfterViewInit {
       this.cx.lineTo(currentPos.x, currentPos.y);
       this.cx.stroke();
     }
+  }
+
+  continue() {
+    var image_url = this.canvas.nativeElement.toDataURL();
+    this.http.post(
+        '/addFregment',
+	{'parent': this.parent, 'image_url': image_url}).subscribe(resp => {
+      this.parent = resp['id'];
+      this.http.get(
+          '/continue?last_id=' + this.parent).subscribe(resp2 => {
+        console.log(resp2);
+        this.prev_cropped = this.sanitizer.bypassSecurityTrustUrl(resp2['cropped_url']);
+      });
+    });
+    this.cx.clearRect(0, 0, this.width, this.height);
+  }
+
+  reveal() {
+    var image_url = this.canvas.nativeElement.toDataURL();
+    this.http.post(
+        '/addFregment',
+	{'parent': this.parent, 'image_url': image_url}).subscribe(resp => {
+      var id = resp['id'];
+      this.http.get<string[]>(
+          '/reveal?last_id=' + id).subscribe(resp => {
+        this.revealed = [];
+        for (let url of resp) {
+          this.revealed.push(this.sanitizer.bypassSecurityTrustUrl(url));
+        }
+        console.log(this.revealed);
+      });
+    });
   }
 }

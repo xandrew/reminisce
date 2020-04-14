@@ -2,3 +2,4 @@ Flask==1.1.1
 flask-login==0.4.1
 flask-dance==3.0.0
 blinker==1.4
+pillow

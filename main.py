@@ -5,6 +5,10 @@ import os
 import datetime
 from requests import get
 import math
+from urllib.request import urlopen
+from io import BytesIO
+import base64
+from PIL import Image
 
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager
@@ -136,11 +140,70 @@ if not os.getenv('GAE_ENV', '').startswith('standard'):
         return resp.raw.read(), resp.status_code, resp.headers.items()
 
 
+global_next_id = 0
+letters = [chr(ord('A') + i) for i in range(ord('Z') - ord('A') + 1)]
+num_letters = len(letters)
+def as_string_id(num_id):
+    num_digits = max(math.ceil(math.log(num_id + 1, num_letters)), 3)
+    result = ''
+    for i in range(num_digits):
+        result = letters[num_id % num_letters] + result
+        num_id //= num_letters
+    assert num_id == 0
+    return result
+
+def get_next_id():
+    global global_next_id
+    res = as_string_id(global_next_id)
+    global_next_id += 1
+    return res
+
+chains = {}
+def add_chain_link(parent, image_url):
+    next_id = get_next_id()
+    chains[next_id] = {'parent': parent, 'image_url': image_url}
+    return next_id
+
+def get_chain(last_id):
+    return chains[last_id]
+
 # ============== Ajax endpoints =======================
 
-@app.route('/sendImage', methods=['POST'])
-def electrocute():
-    return json.dumps({})
+@app.route('/addFregment', methods=['POST'])
+def addFregment():
+    params = request.json
+    return json.dumps({
+        'id': add_chain_link(params['parent'], params['image_url'])
+    })
+
+def image_to_url(img):
+    data = BytesIO()
+    img.save(data, "PNG")
+    data64 = base64.b64encode(data.getvalue())
+    return u'data:img/png;base64,'+data64.decode('utf-8')
+
+@app.route('/continue', methods=['GET'])
+def cont():
+    last_id = request.args['last_id']
+    chain = get_chain(last_id)
+    resp = urlopen(chain['image_url'])
+    img = Image.open(resp.fp)
+    cropped = img.crop((0, 350, 400, 400))
+    return json.dumps(
+        {'last_id': last_id, 'cropped_url': image_to_url(cropped)})
+
+
+def get_url_list(last_id):
+    if not last_id:
+        return []
+    chain = get_chain(last_id)
+    return get_url_list(chain['parent']) + [chain['image_url']]
+
+
+@app.route('/reveal', methods=['GET'])
+def reveal():
+    last_id = request.args['last_id']
+    return json.dumps(get_url_list(last_id))
 
 # ============= Boilerplate!!! ========================
 if __name__ == '__main__':
