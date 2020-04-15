@@ -16,18 +16,17 @@ from flask_login import login_user, current_user, login_required, logout_user
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import oauth_authorized
 
-#import firebase_admin
-#from firebase_admin import credentials
-#from firebase_admin import firestore
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
-# # ========== FireStore connection ================
-# # Use the application default credentials
-# cred = credentials.ApplicationDefault()
-# firebase_admin.initialize_app(cred, {
-#     'projectId': 'electrocuted-snail',
-# })
-# db = firestore.client()
-
+# ========== FireStore connection ================
+# Use the application default credentials
+cred = credentials.ApplicationDefault()
+firebase_admin.initialize_app(cred, {
+    'projectId': 'foldwithme',
+})
+db = firestore.client()
 
 # ========== Flask setup ==========================
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
@@ -140,7 +139,20 @@ if not os.getenv('GAE_ENV', '').startswith('standard'):
         return resp.raw.read(), resp.status_code, resp.headers.items()
 
 
-global_next_id = 0
+
+
+@firestore.transactional
+def increment_last_id(transaction):
+  id_doc = db.collection('globals').document('id')
+  snapshot = id_doc.get(transaction=transaction)
+  if snapshot.exists:
+      last_id = snapshot.get('last_id')
+  else:
+      last_id = -1
+  next_id = last_id + 1
+  transaction.set(id_doc, {'last_id': next_id})
+  return next_id
+
 letters = [chr(ord('A') + i) for i in range(ord('Z') - ord('A') + 1)]
 num_letters = len(letters)
 def as_string_id(num_id):
@@ -153,25 +165,26 @@ def as_string_id(num_id):
     return result
 
 def get_next_id():
-    global global_next_id
-    res = as_string_id(global_next_id)
-    global_next_id += 1
-    return res
+    transaction = db.transaction()
+    return as_string_id(increment_last_id(transaction))
 
-chains = {}
+def link_ref(link_id):
+    return db.collection('links').document(link_id)
+
 def add_chain_link(parent, image_url):
     next_id = get_next_id()
-    chains[next_id] = {'parent': parent, 'image_url': image_url}
+    link_ref(next_id).set({'parent': parent, 'image_url': image_url})
     return next_id
 
-def get_chain(last_id):
-    return chains[last_id]
+def get_chain_link(link_id):
+    return link_ref(link_id).get().to_dict()
 
 # ============== Ajax endpoints =======================
 
 @app.route('/addFregment', methods=['POST'])
 def addFregment():
     params = request.json
+    print(len(params['image_url']))
     return json.dumps({
         'id': add_chain_link(params['parent'], params['image_url'])
     })
@@ -185,7 +198,7 @@ def image_to_url(img):
 @app.route('/continue', methods=['GET'])
 def cont():
     last_id = request.args['last_id']
-    chain = get_chain(last_id)
+    chain = get_chain_link(last_id)
     resp = urlopen(chain['image_url'])
     img = Image.open(resp.fp)
     cropped = img.crop((0, 350, 400, 400))
@@ -196,7 +209,7 @@ def cont():
 def get_url_list(last_id):
     if not last_id:
         return []
-    chain = get_chain(last_id)
+    chain = get_chain_link(last_id)
     return get_url_list(chain['parent']) + [chain['image_url']]
 
 
