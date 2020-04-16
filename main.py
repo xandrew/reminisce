@@ -127,12 +127,12 @@ app.logger.addHandler(h1)
 # Just redirects to where angular asserts are served from.
 @app.route('/')
 def root():
-    return redirect('/ui')
+    return redirect('/ui/')
 
 # In dev mode, we proxy /ui over to ng serve. In prod, static assets are served as
 # configured in app.yaml. (See deploy.sh for exact details on how app.yaml is generated.)
 if not os.getenv('GAE_ENV', '').startswith('standard'):
-    @app.route('/ui', defaults={'path': ''})
+    @app.route('/ui/', defaults={'path': ''})
     @app.route('/ui/<path:path>')
     def ui_proxy(path):
         resp = get(f'http://localhost:4200/ui/{path}', stream=True)

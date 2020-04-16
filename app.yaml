@@ -1,7 +1,7 @@
 runtime: python37
 
 handlers:
-- url: /ui$
+- url: /ui/$
   secure: always
   mime_type: text/html
   expiration: 0m
