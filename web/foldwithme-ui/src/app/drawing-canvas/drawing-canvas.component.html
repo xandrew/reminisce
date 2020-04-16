@@ -1,16 +1,10 @@
-<p>drawing-canvas works!</p>
 <div class="fullPage">
-  <div *ngIf="revealed.length == 0" class="fullCanvas">
+  <div class="fullCanvas">
     <img *ngIf="prev_cropped" [src]="prev_cropped">
     <canvas #canvas></canvas>
-  </div>
-  <div *ngIf="revealed.length > 0" class="fullCanvas">
-    <img *ngFor="let url of revealed" [src]="url">
   </div>
 </div>
 <button mat-raised-button type="button" color="primary" (click)="continue()">
 Continue</button>
 <button *ngIf='parent' mat-raised-button type="button" color="accent" (click)="reveal()">
   Reveal ALL!</button>
-
-

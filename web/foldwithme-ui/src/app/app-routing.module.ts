@@ -1,12 +1,17 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
 
+import { DrawingCanvasComponent } from './drawing-canvas/drawing-canvas.component';
+import { RevealerComponent } from './revealer/revealer.component';
 
+const routes: Routes = [
+  { path: 'draw/:parent', component: DrawingCanvasComponent },
+  { path: 'reveal/:id', component: RevealerComponent }
+];
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ]
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

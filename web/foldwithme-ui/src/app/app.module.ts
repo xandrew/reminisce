@@ -9,11 +9,13 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { RevealerComponent } from './revealer/revealer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DrawingCanvasComponent
+    DrawingCanvasComponent,
+    RevealerComponent
   ],
   imports: [
     BrowserModule,

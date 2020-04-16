@@ -3,20 +3,25 @@
  * https://medium.com/@tarik.nzl/creating-a-canvas-component-with-free-hand-drawing-with-rxjs-and-angular-61279f577415
  */
 
-import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, Input, ElementRef, AfterViewInit, OnInit, ViewChild } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
+import { map, switchMap, takeUntil, pairwise } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-drawing-canvas',
   templateUrl: './drawing-canvas.component.html',
   styleUrls: ['./drawing-canvas.component.scss']
 })
-export class DrawingCanvasComponent implements AfterViewInit {
+export class DrawingCanvasComponent implements AfterViewInit, OnInit {
 
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+  constructor(
+      private http: HttpClient,
+      private sanitizer: DomSanitizer,
+      private route: ActivatedRoute,
+      private router: Router) { }
 
   @ViewChild('canvas', {static: false}) public canvas: ElementRef;
 
@@ -26,7 +31,6 @@ export class DrawingCanvasComponent implements AfterViewInit {
   private cx: CanvasRenderingContext2D;
   private parent = '';
   private prev_cropped: SafeUrl;
-  private revealed: SafeUrl[] = [];
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -82,35 +86,35 @@ export class DrawingCanvasComponent implements AfterViewInit {
     }
   }
 
-  continue() {
+  ngOnInit() {
+    this.route.paramMap.pipe(
+      switchMap((params: ParamMap) => {
+        if (this.cx) {
+	  this.cx.clearRect(0, 0, this.width, this.height);
+	}
+        this.parent = params.get('parent');
+        this.prev_cropped = '';
+        return this.http.get(
+            '/continue?last_id=' + this.parent);
+      }),
+      map(resp => this.sanitizer.bypassSecurityTrustUrl(resp['cropped_url']))
+    ).subscribe(cropped_url => {this.prev_cropped = cropped_url; console.log(this.prev_cropped);});
+  }
+
+  post_image() {
     var image_url = this.canvas.nativeElement.toDataURL();
-    this.http.post(
+    return this.http.post(
         '/addFregment',
-	{'parent': this.parent, 'image_url': image_url}).subscribe(resp => {
-      this.parent = resp['id'];
-      this.http.get(
-          '/continue?last_id=' + this.parent).subscribe(resp2 => {
-        console.log(resp2);
-        this.prev_cropped = this.sanitizer.bypassSecurityTrustUrl(resp2['cropped_url']);
-      });
-    });
-    this.cx.clearRect(0, 0, this.width, this.height);
+        {'parent': this.parent, 'image_url': image_url});
+  }
+
+continue() {
+    this.post_image().subscribe(resp =>
+      this.router.navigate(['draw', resp['id']]));
   }
 
   reveal() {
-    var image_url = this.canvas.nativeElement.toDataURL();
-    this.http.post(
-        '/addFregment',
-	{'parent': this.parent, 'image_url': image_url}).subscribe(resp => {
-      var id = resp['id'];
-      this.http.get<string[]>(
-          '/reveal?last_id=' + id).subscribe(resp => {
-        this.revealed = [];
-        for (let url of resp) {
-          this.revealed.push(this.sanitizer.bypassSecurityTrustUrl(url));
-        }
-        console.log(this.revealed);
-      });
-    });
+    this.post_image().subscribe(resp =>
+      this.router.navigate(['reveal', resp['id']]));
   }
 }
