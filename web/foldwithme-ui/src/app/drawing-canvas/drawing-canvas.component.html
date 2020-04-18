@@ -3,6 +3,13 @@
     <img *ngIf="prev_cropped" [src]="prev_cropped">
     <canvas #canvas></canvas>
   </div>
+  <div class="palette">
+    <div *ngFor="let color of ['purple', 'blue', 'green', 'gold', 'yellow', 'magenta', 'pink', 'red', 'brown', 'grey', 'black']">
+      <button  mat-mini-fab type="button" (click)="setColor(color)">
+	<mat-icon [ngStyle]="{'color': color}">create</mat-icon>
+      </button>
+    </div>
+  </div>
 </div>
 <button mat-raised-button type="button" color="primary" (click)="continue()">
 Continue</button>

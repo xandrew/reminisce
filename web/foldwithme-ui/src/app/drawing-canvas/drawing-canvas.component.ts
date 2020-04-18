@@ -4,7 +4,7 @@
  */
 
 import { Component, Input, ElementRef, AfterViewInit, OnInit, ViewChild } from '@angular/core';
-import { fromEvent } from 'rxjs';
+import { of, fromEvent } from 'rxjs';
 import { map, switchMap, takeUntil, pairwise } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -41,7 +41,7 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
 
     this.cx.lineWidth = 3;
     this.cx.lineCap = 'round';
-    this.cx.strokeStyle = '#000';
+    this.cx.strokeStyle = 'black';
 
     this.captureEvents(canvasEl);
   }
@@ -86,6 +86,15 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
     }
   }
 
+  setColor(color) {
+    this.cx.strokeStyle = color;
+  }
+
+  cropped_url_for_parent(parent) {
+    return this.http.get('/continue?last_id=' + this.parent).pipe(
+      map(resp => this.sanitizer.bypassSecurityTrustUrl(resp['cropped_url'])))
+  }
+
   ngOnInit() {
     this.route.paramMap.pipe(
       switchMap((params: ParamMap) => {
@@ -93,12 +102,15 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
 	  this.cx.clearRect(0, 0, this.width, this.height);
 	}
         this.parent = params.get('parent');
-        this.prev_cropped = '';
-        return this.http.get(
-            '/continue?last_id=' + this.parent);
-      }),
-      map(resp => this.sanitizer.bypassSecurityTrustUrl(resp['cropped_url']))
-    ).subscribe(cropped_url => {this.prev_cropped = cropped_url; console.log(this.prev_cropped);});
+        this.prev_cropped = undefined;
+	if (this.parent === '-') {
+	  this.parent = '';
+	  return of(undefined);
+	} else {
+	  return this.cropped_url_for_parent(this.parent);
+	}
+      })
+    ).subscribe(cropped_url => this.prev_cropped = cropped_url);
   }
 
   post_image() {

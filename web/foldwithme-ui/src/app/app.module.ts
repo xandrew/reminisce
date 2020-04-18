@@ -6,6 +6,7 @@ import { DrawingCanvasComponent } from './drawing-canvas/drawing-canvas.componen
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,6 +22,7 @@ import { RevealerComponent } from './revealer/revealer.component';
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
+    MatIconModule,
     HttpClientModule,
     AppRoutingModule
   ],
