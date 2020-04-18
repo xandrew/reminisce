@@ -5,3 +5,4 @@ __pycache__
 foldwithme-key.json
 sendgrid.env
 prod_ui
+google_client_secret

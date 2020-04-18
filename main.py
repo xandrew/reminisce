@@ -39,88 +39,85 @@ h1.setFormatter(logging.Formatter('%(levelname)-8s %(asctime)s %(filename)s:%(li
 app.logger.addHandler(h1)
 
 
-# # ============ SnailUser =========================
-# def user_db_ref(db, email):
-#     return db.collection('users').document(email)
+# ============ User =========================
+def user_db_ref(db, email):
+    return db.collection('users').document(email)
         
-# def user_from_db(db, email):
-#     doc = user_db_ref(db, email).get()
-#     as_dict = doc.to_dict()
-#     picture = ''
-#     if as_dict is not None:
-#         picture = as_dict.get('picture', '')
-#     return SnailUser(email, picture)
+def user_from_db(db, email):
+    doc = user_db_ref(db, email).get()
+    as_dict = doc.to_dict()
+    picture = ''
+    given_name = ''
+    if as_dict is not None:
+        picture = as_dict.get('picture', '')
+        given_name = as_dict.get('given_name', '')
+    return FoldUser(email, picture, given_name)
 
-# class SnailUser:
-#     def __init__(self, email, picture):
-#         self.email = email
-#         self.picture = picture
+class FoldUser:
+    def __init__(self, email, picture, given_name):
+        self.email = email
+        self.picture = picture
+        self.given_name = given_name
 
-#     def save_to_db(self, db):
-#         ref = user_db_ref(db, self.email)
-#         initial_data = {'picture': self.picture}
-#         if ref.get().exists:
-#             ref.update(initial_data)
-#         else:
-#             ref.set(initial_data)
-#             transaction = db.transaction()
-#             replace_tags(
-#                 transaction,
-#                 tags_collection(self.email),
-#                 [{'tag_id': 'bill',
-#                   'description': 'Bill',
-#                   'icon': 'attach_money'},
-#                  {'tag_id': 'warranty',
-#                   'description': 'Warranty',
-#                   'icon': 'card_giftcard'}])
+    def save_to_db(self, db):
+        ref = user_db_ref(db, self.email)
+        initial_data = {'picture': self.picture, 'given_name': self.given_name}
+        if ref.get().exists:
+            ref.update(initial_data)
+        else:
+            ref.set(initial_data)
     
-#     @property
-#     def is_active(self):
-#         return True
-#     @property
-#     def is_authenticated(self):
-#         return True
-#     @property
-#     def is_anonymous(self):
-#         return False
+    @property
+    def is_active(self):
+        return True
+    @property
+    def is_authenticated(self):
+        return True
+    @property
+    def is_anonymous(self):
+        return False
 
-#     def get_id(self):
-#         return self.email
+    def get_id(self):
+        return self.email
 
-#     def __str__(self):
-#         return f'User with email {self.email}'
+    def __str__(self):
+        return f'User with email {self.email}'
 
 
-# # ========== Login setup ===========================
-# login_manager = LoginManager()
-# login_manager.init_app(app)
+# ========== Login setup ===========================
+login_manager = LoginManager()
+login_manager.init_app(app)
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return user_from_db(db, user_id)
+@login_manager.user_loader
+def load_user(user_id):
+    return user_from_db(db, user_id)
 
-# google_blueprint = make_google_blueprint(
-#     client_id='387666456097-gpv671f9feq2s66ul0goi4c51913uqj7.apps.googleusercontent.com',
-#     client_secret='OLfJlshhM_BJ86o3x3cvLw2i',
-#     scope=[
-#         'openid',
-#         'https://www.googleapis.com/auth/userinfo.email',
-#     ]
-# )
-# app.register_blueprint(google_blueprint, url_prefix='/auth')
 
-# @oauth_authorized.connect
-# def _on_signin(blueprint, token):
-#     user_json = google.get('oauth2/v1/userinfo').json()
-#     print(user_json)
-#     us = SnailUser(user_json['email'], user_json.get('picture', ''))
-#     us.save_to_db(db)
-#     login_user(us)
+secret = open("google_client_secret").read()
+
+google_blueprint = make_google_blueprint(
+    client_id='594397528159-gb303qan1ci6mna9vthin8qsohae95k8.apps.googleusercontent.com',
+    client_secret=secret,
+    scope=[
+        'openid',
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+    ]
+)
+app.register_blueprint(google_blueprint, url_prefix='/auth')
+
+@oauth_authorized.connect
+def _on_signin(blueprint, token):
+    user_json = google.get('oauth2/v1/userinfo').json()
+    print(user_json)
+    us = FoldUser(user_json['email'], user_json.get('picture', ''), user_json.get('given_name', ''))
+    us.save_to_db(db)
+    login_user(us)
     
-# @app.route('/logout')
-# def logout():
-#     logout_user()
-#     return redirect(url_for('root'))
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('root'))
 
 
 # ============== Main endpoints ========================
@@ -171,9 +168,9 @@ def get_next_id():
 def link_ref(link_id):
     return db.collection('links').document(link_id)
 
-def add_chain_link(parent, image_url):
+def add_chain_link(parent, image_url, user):
     next_id = get_next_id()
-    link_ref(next_id).set({'parent': parent, 'image_url': image_url})
+    link_ref(next_id).set({'parent': parent, 'image_url': image_url, 'user': user})
     return next_id
 
 def get_chain_link(link_id):
@@ -182,11 +179,15 @@ def get_chain_link(link_id):
 # ============== Ajax endpoints =======================
 
 @app.route('/addFregment', methods=['POST'])
-def addFregment():
+def add_fregment():
     params = request.json
-    print(len(params['image_url']))
+    if current_user.is_authenticated:
+        user = current_user.get_id()
+    else:
+        user = 'Anonymous'
+
     return json.dumps({
-        'id': add_chain_link(params['parent'], params['image_url'])
+        'id': add_chain_link(params['parent'], params['image_url'], user)
     })
 
 def image_to_url(img):
@@ -217,6 +218,14 @@ def get_url_list(last_id):
 def reveal():
     last_id = request.args['last_id']
     return json.dumps(get_url_list(last_id))
+
+# Login state endpoint
+@app.route('/login_state', methods=['GET'])
+def login_state():
+    if current_user.is_authenticated:
+        return json.dumps({'email': current_user.email, 'given_name': current_user.given_name, 'picture': current_user.picture})
+    else:
+        return json.dumps({})
 
 # ============= Boilerplate!!! ========================
 if __name__ == '__main__':

@@ -1,1 +1,13 @@
+<div *ngIf="user_email">
+  Hello {{user_given_name}}!!
+    <img [src]="user_picture" class='profile-picture'>
+    
+</div>
+<div *ngIf="!user_email">
+  <p>Hello Anonymous!!</p>
+  <a mat-raised-button color="primary" href="/auth/google">
+    Login with Google Login
+  </a>
+  <p> ... if you want your art associated with you.</p>
+</div>
 <router-outlet></router-outlet>
