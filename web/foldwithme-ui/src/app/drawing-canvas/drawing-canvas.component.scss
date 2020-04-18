@@ -2,9 +2,19 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
+    
 }
 .fullCanvas {
     display: flex;
     flex-flow: column nowrap;
     border: 2px solid #000;
+}
+
+.palette div {
+    margin: 6px;
+}
+
+img {
+    user-select: none;
+    -webkit-user-drag: none;
 }

@@ -1,10 +1,17 @@
 <div class="fullPage">
+  <div class="palette">
+    <div *ngFor="let color of ['black', 'grey', 'purple', 'blue', 'aquamarine', 'green']">
+      <button  mat-mini-fab type="button" (click)="setColor(color)">
+	<mat-icon [ngStyle]="{'color': color}">create</mat-icon>
+      </button>
+    </div>
+  </div>
   <div class="fullCanvas">
-    <img *ngIf="prev_cropped" [src]="prev_cropped">
+    <img *ngIf="prev_cropped" [src]="prev_cropped" draggable="false">
     <canvas #canvas></canvas>
   </div>
   <div class="palette">
-    <div *ngFor="let color of ['purple', 'blue', 'green', 'gold', 'yellow', 'magenta', 'pink', 'red', 'brown', 'grey', 'black']">
+    <div *ngFor="let color of ['gold', 'yellow', 'brown', 'magenta', 'pink', 'red']">
       <button  mat-mini-fab type="button" (click)="setColor(color)">
 	<mat-icon [ngStyle]="{'color': color}">create</mat-icon>
       </button>
