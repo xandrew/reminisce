@@ -1,0 +1,52 @@
+NON-LOGGED IN MAIN
+==================
+[Start New Drawing] [Log in for saving and sharing your art]
+
+LOGGED IN MAIN
+==============
+[Start New Drawing] [Emma's arts] [Gallery1] [Gallery2] [Add Gallery] [Logout]
+
+CANVAS
+======
+[Canvas as today]
+
+[Done button]{goes to DRAWING DETAIL}
+
+DRAWING DETAIL
+==============
+[Artist1][Artist2][Artist3] ... [Last Artist] @date
+[ .............. Bottom of the picture .....]
+
+Continue drawing at [https://....].
+
+[Reveal]
+
+Share in Gallary:
+[Gallery1] ... [Galleryn]
+
+Continuations: {if any}
+[Emma][Date]
+[ ...... Bottom of cont]
+[Lidi][Date]
+[ ...... Bottom of cont]
+
+USER'S ARTS
+===========
+[Artist1][Artist2][Artist3] ... [Last Artist] @ date
+[ .............. Bottom of the picture .....]
+....
+
+GALLERY N
+=========
+Gallery Name
+Give this password to whomever you want to invite: ...
+
+[Artist1][Artist2][Artist3] ... [Last Artist] @ date
+[ .............. Bottom of the picture .....]
+....
+
+ADD GALLERY
+===========
+Join a Gallery | Create a Gallery
+Enter Code     | Enter metadata
+OK             | OK
