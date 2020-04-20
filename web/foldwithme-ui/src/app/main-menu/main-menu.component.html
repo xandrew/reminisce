@@ -1,0 +1,14 @@
+<div class="menu-buttons">
+  <button color='accent'  mat-raised-button routerLink="/draw/-">
+    Start<br>Drawing!
+  </button>
+  <a *ngIf="!fold_user.email" color='primary' mat-raised-button href="/auth/google">
+    Login<br>for Saving<br>and Sharing
+  </a>
+  <button *ngIf="fold_user.email" color='primary' mat-raised-button href="/auth/google">
+    Your<br><img [src]="fold_user.picture" class='profile-picture'><br>art
+  </button>
+  <a *ngIf="fold_user.email" color='primary' mat-raised-button href="/logout">
+    Logout<br>(Bye!)
+  </a>
+</div>

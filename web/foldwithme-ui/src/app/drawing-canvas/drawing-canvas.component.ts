@@ -72,6 +72,34 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
   
         this.drawOnCanvas(prevPos, currentPos);
       });
+
+    fromEvent(canvasEl, 'touchstart')
+    .pipe(
+      switchMap((e) => {
+        return fromEvent(canvasEl, 'touchmove')
+          .pipe(
+            takeUntil(fromEvent(canvasEl, 'touchend')),
+            takeUntil(fromEvent(canvasEl, 'touchcancel')),
+            pairwise() /* Return the previous and last values as array */
+          )
+      })
+    ).subscribe((res: [TouchEvent, TouchEvent]) => {
+        const rect = canvasEl.getBoundingClientRect();
+  
+        const prevPos = {
+          x: res[0].targetTouches[0].clientX - rect.left,
+          y: res[0].targetTouches[0].clientY - rect.top
+        };
+  
+        const currentPos = {
+          x: res[1].targetTouches[0].clientX - rect.left,
+          y: res[1].targetTouches[0].clientY - rect.top
+        };
+  
+        this.drawOnCanvas(prevPos, currentPos);
+      });
+
+
   }
 
   private drawOnCanvas(prevPos: { x: number, y: number }, currentPos: { x: number, y: number }) {

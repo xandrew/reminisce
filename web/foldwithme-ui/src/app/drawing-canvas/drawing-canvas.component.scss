@@ -10,6 +10,11 @@
     border: 2px solid #000;
 }
 
+canvas {
+    cursor: crosshair;
+    touch-action: none;
+}
+
 .palette div {
     margin: 6px;
 }
@@ -17,4 +22,5 @@
 img {
     user-select: none;
     -webkit-user-drag: none;
+    background: lightgrey;
 }

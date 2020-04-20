@@ -12,12 +12,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { FoldUserModule } from './fold-user/fold-user.module';
 import { RevealerComponent } from './revealer/revealer.component';
+import { MainMenuComponent } from './main-menu/main-menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DrawingCanvasComponent,
-    RevealerComponent
+    RevealerComponent,
+    MainMenuComponent
   ],
   imports: [
     BrowserModule,

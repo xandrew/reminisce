@@ -11,6 +11,5 @@ export class AppComponent {
   title = 'foldwithme-ui';
 
   constructor(private fold_user: FoldUserModule) {
-    console.log(fold_user);
   }
 }
