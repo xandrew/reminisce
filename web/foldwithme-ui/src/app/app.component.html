@@ -1,9 +1,9 @@
-<div *ngIf="user_email">
-  Hello {{user_given_name}}!!
-    <img [src]="user_picture" class='profile-picture'>
+<div *ngIf="fold_user.email">
+  Hello {{fold_user.given_name}}!!
+    <img [src]="fold_user.picture" class='profile-picture'>
     
 </div>
-<div *ngIf="!user_email">
+<div *ngIf="!fold_user.email">
   <p>Hello Anonymous!!</p>
   <a mat-raised-button color="primary" href="/auth/google">
     Login with Google Login

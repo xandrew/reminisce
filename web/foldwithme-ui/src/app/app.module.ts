@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { FoldUserModule } from './fold-user/fold-user.module';
 import { RevealerComponent } from './revealer/revealer.component';
 
 @NgModule({
@@ -24,7 +25,8 @@ import { RevealerComponent } from './revealer/revealer.component';
     MatButtonModule,
     MatIconModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FoldUserModule
   ],
   providers: [],
   bootstrap: [AppComponent]
