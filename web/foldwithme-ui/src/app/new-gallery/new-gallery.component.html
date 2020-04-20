@@ -1,0 +1,11 @@
+<div class="mat-h1">Create New Gallery!</div>
+<mat-form-field>
+  <mat-label>Short Gallery Title</mat-label>
+  <input matInput placeholder="Ex. Eve&Bob's Gallery" [(ngModel)]="title">
+</mat-form-field>
+<button type="button" color="primary" mat-raised-button (click)="go()">
+  Create
+</button>
+<button color="accent" mat-raised-button routerLink="/">
+  Cancel
+</button>

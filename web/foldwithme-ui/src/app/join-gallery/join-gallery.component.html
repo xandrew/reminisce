@@ -1,0 +1,13 @@
+<div class="mat-h1">Join a Gallery</div>
+<div>Ask an existing member for the gallery code!</div>
+<mat-form-field>
+  <mat-label>Gallery Code</mat-label>
+  <input matInput placeholder="Ex. 12345" [(ngModel)]="code">
+</mat-form-field>
+<button type="button" color="primary" mat-raised-button (click)="go()">
+  Join
+</button>
+<button color="accent" mat-raised-button routerLink="/">
+  Cancel
+</button>
+

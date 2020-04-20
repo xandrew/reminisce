@@ -6,7 +6,17 @@
     Login<br>for Saving<br>and Sharing
   </a>
   <button *ngIf="fold_user.email" color='primary' mat-raised-button href="/auth/google">
-    Your<br><img [src]="fold_user.picture" class='profile-picture'><br>art
+    Your<br><img [src]="fold_user.picture" class='profile-picture'><br>Art
+  </button>
+  <button *ngFor="let gallery of fold_user.galleries" mat-raised-button [routerLink]="'/gallery/' + gallery.code">
+    <b>Gallery</b><br>
+    {{gallery.title}}
+  </button>
+  <button *ngIf="fold_user.email" color='accent' mat-raised-button routerLink="/join_gallery">
+    Join<br>a Gallery!
+  </button>
+  <button *ngIf="fold_user.email" color='accent' mat-raised-button routerLink="/new_gallery">
+    Create<br>New Gallery!
   </button>
   <a *ngIf="fold_user.email" color='primary' mat-raised-button href="/logout">
     Logout<br>(Bye!)

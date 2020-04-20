@@ -9,6 +9,7 @@ from urllib.request import urlopen
 from io import BytesIO
 import base64
 from PIL import Image
+import random
 
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager
@@ -40,11 +41,11 @@ app.logger.addHandler(h1)
 
 
 # ============ User =========================
-def user_db_ref(db, email):
+def user_db_ref(email):
     return db.collection('users').document(email)
         
-def user_from_db(db, email):
-    doc = user_db_ref(db, email).get()
+def user_from_db(email):
+    doc = user_db_ref(email).get()
     as_dict = doc.to_dict()
     picture = ''
     given_name = ''
@@ -59,8 +60,8 @@ class FoldUser:
         self.picture = picture
         self.given_name = given_name
 
-    def save_to_db(self, db):
-        ref = user_db_ref(db, self.email)
+    def save_to_db(self):
+        ref = user_db_ref(self.email)
         initial_data = {'picture': self.picture, 'given_name': self.given_name}
         if ref.get().exists:
             ref.update(initial_data)
@@ -90,7 +91,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return user_from_db(db, user_id)
+    return user_from_db(user_id)
 
 
 secret = open("google_client_secret").read()
@@ -111,7 +112,7 @@ def _on_signin(blueprint, token):
     user_json = google.get('oauth2/v1/userinfo').json()
     print(user_json)
     us = FoldUser(user_json['email'], user_json.get('picture', ''), user_json.get('given_name', ''))
-    us.save_to_db(db)
+    us.save_to_db()
     login_user(us)
     
 @app.route('/logout')
@@ -176,6 +177,21 @@ def add_chain_link(parent, image_url, user):
 def get_chain_link(link_id):
     return link_ref(link_id).get().to_dict()
 
+def gallery_ref(code):
+    return db.collection('galleries').document(code)
+
+def user_galleries_collection(user_id):
+    return user_db_ref(user_id).collection('galleries')
+
+def random_code():
+    return ''.join(random.choices('0123456789', k=5))
+
+def new_gallery_code():
+    code = random_code()
+    while gallery_ref(code).get().exists:
+      code = random_code()
+    return code
+
 # ============== Ajax endpoints =======================
 
 @app.route('/addFregment', methods=['POST'])
@@ -218,6 +234,37 @@ def get_url_list(last_id):
 def reveal():
     last_id = request.args['last_id']
     return json.dumps(get_url_list(last_id))
+
+
+def add_gallery_to_user(user, code):
+    user_galleries_collection(user).document(code).set({})
+
+@app.route('/new_gallery', methods=['POST'])
+@login_required
+def new_gallery():
+    title = request.json['title']
+    user = current_user.get_id()
+    code = new_gallery_code()
+    gallery_ref(code).set({'title': title})
+    add_gallery_to_user(user, code)
+    return json.dumps({})
+
+@app.route('/join_gallery', methods=['POST'])
+@login_required
+def join_gallery():
+    code = request.json['code']
+    user = current_user.get_id()
+    add_gallery_to_user(user, code)
+    return json.dumps({})
+
+@app.route('/user_galleries', methods=['GET'])
+@login_required
+def user_galleries():
+    user = current_user.get_id()
+    return json.dumps([
+        { 'code': snapshot.id,
+          'title': gallery_ref(snapshot.id).get().get('title') }
+        for snapshot in user_galleries_collection(user).stream()])
 
 # Login state endpoint
 @app.route('/login_state', methods=['GET'])

@@ -4,10 +4,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { DrawingCanvasComponent } from './drawing-canvas/drawing-canvas.component';
 import { RevealerComponent } from './revealer/revealer.component';
+import { GalleryComponent } from './gallery/gallery.component';
+import { NewGalleryComponent } from './new-gallery/new-gallery.component';
+import { JoinGalleryComponent } from './join-gallery/join-gallery.component';
 
 const routes: Routes = [
   { path: 'draw/:parent', component: DrawingCanvasComponent },
   { path: 'reveal/:id', component: RevealerComponent },
+  { path: 'new_gallery', component: NewGalleryComponent },
+  { path: 'join_gallery', component: JoinGalleryComponent },
+  { path: 'gallery/:code', component: GalleryComponent },
   { path: '', component: MainMenuComponent, pathMatch: 'full' }
 ];
 
