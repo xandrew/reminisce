@@ -59,15 +59,17 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
       })
     ).subscribe((res: [MouseEvent, MouseEvent]) => {
         const rect = canvasEl.getBoundingClientRect();
-  
+        const scaleX = this.width / rect.width;
+        const scaleY = this.height / rect.height;
+
         const prevPos = {
-          x: res[0].clientX - rect.left,
-          y: res[0].clientY - rect.top
+          x: (res[0].clientX - rect.left) * scaleX,
+          y: (res[0].clientY - rect.top) * scaleY
         };
   
         const currentPos = {
-          x: res[1].clientX - rect.left,
-          y: res[1].clientY - rect.top
+          x: (res[1].clientX - rect.left) * scaleX,
+          y: (res[1].clientY - rect.top) * scaleY
         };
   
         this.drawOnCanvas(prevPos, currentPos);
@@ -85,15 +87,17 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
       })
     ).subscribe((res: [TouchEvent, TouchEvent]) => {
         const rect = canvasEl.getBoundingClientRect();
+        const scaleX = this.width / rect.width;
+        const scaleY = this.height / rect.height;
   
         const prevPos = {
-          x: res[0].targetTouches[0].clientX - rect.left,
-          y: res[0].targetTouches[0].clientY - rect.top
+          x: (res[0].targetTouches[0].clientX - rect.left) * scaleX,
+          y: (res[0].targetTouches[0].clientY - rect.top) * scaleY
         };
   
         const currentPos = {
-          x: res[1].targetTouches[0].clientX - rect.left,
-          y: res[1].targetTouches[0].clientY - rect.top
+          x: (res[1].targetTouches[0].clientX - rect.left) * scaleX,
+          y: (res[1].targetTouches[0].clientY - rect.top) * scaleY
         };
   
         this.drawOnCanvas(prevPos, currentPos);
