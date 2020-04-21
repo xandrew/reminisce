@@ -152,9 +152,14 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
         {'parent': this.parent, 'image_url': image_url});
   }
 
-continue() {
+  continue() {
     this.post_image().subscribe(resp =>
       this.router.navigate(['draw', resp['id']]));
+  }
+
+  done() {
+    this.post_image().subscribe(resp =>
+      this.router.navigate(['picture', resp['id']]));
   }
 
   reveal() {

@@ -20,6 +20,8 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
 import { NewGalleryComponent } from './new-gallery/new-gallery.component';
 import { JoinGalleryComponent } from './join-gallery/join-gallery.component';
 import { GalleryComponent } from './gallery/gallery.component';
+import { PictureDetailComponent } from './picture-detail/picture-detail.component';
+import { PictureWithAuthorsComponent } from './picture-with-authors/picture-with-authors.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { GalleryComponent } from './gallery/gallery.component';
     MainMenuComponent,
     NewGalleryComponent,
     JoinGalleryComponent,
-    GalleryComponent
+    GalleryComponent,
+    PictureDetailComponent,
+    PictureWithAuthorsComponent
   ],
   imports: [
     BrowserModule,

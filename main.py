@@ -192,6 +192,38 @@ def new_gallery_code():
       code = random_code()
     return code
 
+def get_user_meta(user_id):
+    all_data = user_db_ref(user_id).get().to_dict()
+    return {'picture': all_data['picture'],
+            'given_name': all_data['given_name']}
+
+def get_author_list(last_id):
+    if not last_id:
+        return []
+    chain = get_chain_link(last_id)
+    return get_author_list(chain['parent']) + [get_user_meta(chain['user'])]
+
+def image_to_url(img):
+    data = BytesIO()
+    img.save(data, "PNG")
+    data64 = base64.b64encode(data.getvalue())
+    return u'data:img/png;base64,'+data64.decode('utf-8')
+
+def cropped_url(full_url):
+    resp = urlopen(full_url)
+    img = Image.open(resp.fp)
+    cropped = img.crop((0, 350, 400, 400))
+    return image_to_url(cropped)
+
+def get_chain_display_data(user, last_id):
+    chain = get_chain_link(last_id)
+    image_url = chain['image_url']
+    if user == chain['user']:
+        picture = image_url
+    else:
+        picture = cropped_url(image_url)
+    return {'picture': picture, 'authors': get_author_list(last_id)}
+
 # ============== Ajax endpoints =======================
 
 @app.route('/addFregment', methods=['POST'])
@@ -206,21 +238,12 @@ def add_fregment():
         'id': add_chain_link(params['parent'], params['image_url'], user)
     })
 
-def image_to_url(img):
-    data = BytesIO()
-    img.save(data, "PNG")
-    data64 = base64.b64encode(data.getvalue())
-    return u'data:img/png;base64,'+data64.decode('utf-8')
-
 @app.route('/continue', methods=['GET'])
 def cont():
     last_id = request.args['last_id']
     chain = get_chain_link(last_id)
-    resp = urlopen(chain['image_url'])
-    img = Image.open(resp.fp)
-    cropped = img.crop((0, 350, 400, 400))
     return json.dumps(
-        {'last_id': last_id, 'cropped_url': image_to_url(cropped)})
+        {'last_id': last_id, 'cropped_url': cropped_url(chain['image_url'])})
 
 
 def get_url_list(last_id):
@@ -265,6 +288,21 @@ def user_galleries():
         { 'code': snapshot.id,
           'title': gallery_ref(snapshot.id).get().get('title') }
         for snapshot in user_galleries_collection(user).stream()])
+
+@app.route('/gallery_contents', methods=['GET'])
+@login_required
+def gallery_contents():
+    code = request.args['code']
+    user = current_user.get_id()
+    return json.dumps(
+        [get_chain_display_data(user, snapshot.id)
+         for snapshot in gallery_ref(code).collection('pictures').stream()])
+
+@app.route('/picture_data', methods=['GET'])
+@login_required
+def picture_data():
+    user = current_user.get_id()
+    return json.dumps(get_chain_display_data(user, request.args['id']))
 
 # Login state endpoint
 @app.route('/login_state', methods=['GET'])

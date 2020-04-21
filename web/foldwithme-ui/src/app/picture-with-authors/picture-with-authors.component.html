@@ -1,0 +1,11 @@
+<div *ngIf="display_data" class="panda">
+  <div class="authors">
+    <div *ngFor="let author of display_data.authors; last as isLast">
+      <img *ngIf="isLast" [src]="author.picture" [title]="author.given_name" class="lastprofile">
+      <img *ngIf="!isLast" [src]="author.picture" [title]="author.given_name" class="profile">
+    </div>
+    <div class="emptydiv">
+    </div>
+  </div>
+  <img [src]="display_data.picture" class="picture">
+</div>

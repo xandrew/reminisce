@@ -7,6 +7,7 @@ import { RevealerComponent } from './revealer/revealer.component';
 import { GalleryComponent } from './gallery/gallery.component';
 import { NewGalleryComponent } from './new-gallery/new-gallery.component';
 import { JoinGalleryComponent } from './join-gallery/join-gallery.component';
+import { PictureDetailComponent } from './picture-detail/picture-detail.component';
 
 const routes: Routes = [
   { path: 'draw/:parent', component: DrawingCanvasComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'new_gallery', component: NewGalleryComponent },
   { path: 'join_gallery', component: JoinGalleryComponent },
   { path: 'gallery/:code', component: GalleryComponent },
+  { path: 'picture/:id', component: PictureDetailComponent },
   { path: '', component: MainMenuComponent, pathMatch: 'full' }
 ];
 

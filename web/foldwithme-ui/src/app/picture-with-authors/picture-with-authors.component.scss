@@ -1,0 +1,27 @@
+.profile {
+    width: 40px;
+    height: 40px;
+    border-bottom: 2px solid #fff;
+}
+.lastprofile {
+    width: 40px;
+    height: 40px;
+    border-left: 2px solid #fff;
+    border-top: 2px solid #fff;
+}
+
+.emptydiv {
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    height: 40px;
+    flex: 1 0 auto;
+}
+
+.panda {
+    border: 2px solid #fff;
+}
+
+.authors {
+    display: flex;
+    flex-flow: row nowrap;
+}

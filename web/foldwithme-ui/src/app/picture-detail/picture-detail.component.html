@@ -1,0 +1,10 @@
+<div class="alldetail" *ngIf="display_data">
+  <app-picture-with-authors [display_data]="display_data">
+  </app-picture-with-authors>
+  <button color="accent" mat-raised-button [routerLink]="'/draw/'+id">
+    Continue
+  </button>
+  <button color="accent" mat-raised-button [routerLink]="'/reveal/'+id">
+    Reveal
+  </button>
+</div>
