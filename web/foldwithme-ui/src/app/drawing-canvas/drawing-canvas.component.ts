@@ -31,6 +31,7 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
   private cx: CanvasRenderingContext2D;
   private parent = '';
   private prev_cropped: SafeUrl;
+  private currentColor: string;
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -41,7 +42,7 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
 
     this.cx.lineWidth = 3;
     this.cx.lineCap = 'round';
-    this.cx.strokeStyle = 'black';
+    this.setColor('black');
 
     this.captureEvents(canvasEl);
   }
@@ -120,6 +121,7 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
 
   setColor(color) {
     this.cx.strokeStyle = color;
+    this.currentColor = color;
   }
 
   cropped_url_for_parent(parent) {
