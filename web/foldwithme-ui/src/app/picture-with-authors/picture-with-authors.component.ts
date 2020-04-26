@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-picture-with-authors',
@@ -7,10 +8,13 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class PictureWithAuthorsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
   @Input() display_data;
 
   ngOnInit() {
   }
 
+  onClick() {
+    this.router.navigate(['picture', this.display_data['id']]);
+  }
 }

@@ -1,4 +1,4 @@
-<div *ngIf="display_data" class="panda">
+<div *ngIf="display_data" class="panda" (click)="onClick()">
   <div class="authors">
     <div *ngFor="let author of display_data.authors; last as isLast">
       <img *ngIf="isLast" [src]="author.picture" [title]="author.given_name" class="lastprofile">

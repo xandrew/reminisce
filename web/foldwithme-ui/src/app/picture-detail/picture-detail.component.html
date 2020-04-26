@@ -7,4 +7,14 @@
   <button color="accent" mat-raised-button [routerLink]="'/reveal/'+id">
     Reveal
   </button>
+  <div>Feature in galleries:</div>
+  <div *ngFor="let gallery of galleries">
+    <button *ngIf="gallery.has_picture" mat-stroked-button disabled="true">
+      {{gallery.title}}
+    </button>
+    <button *ngIf="!gallery.has_picture" mat-raised-button
+	    (click)="add_to_gallery(gallery.code)">
+      {{gallery.title}}
+    </button>
+  </div>
 </div>

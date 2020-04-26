@@ -1,2 +1,7 @@
 <div class="mat-h1">Gallery!</div>
 <div>Code for this gallary is: <b>{{code}}</b></div>
+
+<app-picture-with-authors
+  *ngFor="let picture of pictures"
+  [display_data]="picture">
+</app-picture-with-authors>

@@ -183,6 +183,28 @@ def gallery_ref(code):
 def user_galleries_collection(user_id):
     return user_db_ref(user_id).collection('galleries')
 
+def gallery_pictures_collection(code):
+    return gallery_ref(code).collection('pictures')
+
+def user_galleries(user_id):
+    return [
+        { 'code': snapshot.id,
+          'title': gallery_ref(snapshot.id).get().get('title') }
+        for snapshot in user_galleries_collection(user_id).stream()]
+
+def gallery_has_picture(code, picture_id):
+    return gallery_pictures_collection(code).document(picture_id).get().exists
+
+@firestore.transactional
+def add_picture_to_gallery_transaction(transaction, code, picture_id):
+    doc = gallery_pictures_collection(code).document(picture_id)
+    if not doc.get(transaction=transaction).exists:
+        transaction.set(doc, {})
+
+def add_picture_to_gallery(code, picture_id):
+    transaction = db.transaction()
+    add_picture_to_gallery_transaction(transaction, code, picture_id)
+
 def random_code():
     return ''.join(random.choices('0123456789', k=5))
 
@@ -222,7 +244,8 @@ def get_chain_display_data(user, last_id):
         picture = image_url
     else:
         picture = cropped_url(image_url)
-    return {'picture': picture, 'authors': get_author_list(last_id)}
+    return {
+        'id': last_id, 'picture': picture, 'authors': get_author_list(last_id)}
 
 # ============== Ajax endpoints =======================
 
@@ -282,12 +305,9 @@ def join_gallery():
 
 @app.route('/user_galleries', methods=['GET'])
 @login_required
-def user_galleries():
+def user_galleries_req():
     user = current_user.get_id()
-    return json.dumps([
-        { 'code': snapshot.id,
-          'title': gallery_ref(snapshot.id).get().get('title') }
-        for snapshot in user_galleries_collection(user).stream()])
+    return json.dumps(user_galleries(user))
 
 @app.route('/gallery_contents', methods=['GET'])
 @login_required
@@ -296,13 +316,29 @@ def gallery_contents():
     user = current_user.get_id()
     return json.dumps(
         [get_chain_display_data(user, snapshot.id)
-         for snapshot in gallery_ref(code).collection('pictures').stream()])
+         for snapshot in gallery_pictures_collection(code).stream()])
 
 @app.route('/picture_data', methods=['GET'])
 @login_required
 def picture_data():
     user = current_user.get_id()
     return json.dumps(get_chain_display_data(user, request.args['id']))
+
+@app.route('/picture_galleries', methods=['GET'])
+@login_required
+def picture_galleries():
+    picture_id = request.args['id']
+    return json.dumps([
+        dict(
+            list(gallery.items()) +
+            [('has_picture', gallery_has_picture(gallery['code'], picture_id))])
+        for gallery in user_galleries(current_user.get_id())])
+
+@app.route('/add_picture_to_gallery', methods=['POST'])
+@login_required
+def add_picture_to_gallery_handler():
+    add_picture_to_gallery(request.json['code'], request.json['picture_id'])
+    return json.dumps({})
 
 # Login state endpoint
 @app.route('/login_state', methods=['GET'])
