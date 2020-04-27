@@ -9,6 +9,7 @@
   <div *ngIf="pictures.length" class="mat-h2">Earlier art</div>
   <app-picture-with-authors
     *ngFor="let picture of pictures"
-    [display_data]="picture">
+    [display_data]="picture"
+    [gallery]="code">
   </app-picture-with-authors>
 </div>

@@ -10,6 +10,7 @@ export class PictureWithAuthorsComponent implements OnInit {
 
   constructor(private router: Router) { }
   @Input() display_data;
+  @Input() gallery;
 
   ngOnInit() {
   }
