@@ -9,9 +9,16 @@
   <div class="fullCanvas">
     <img *ngIf="prev_cropped" [src]="prev_cropped" draggable="false">
     <canvas #canvas></canvas>
-    <button mat-raised-button type="button" color="primary" (click)="done()">
-      Done
-    </button>
+    <div class="buttons">
+      <button mat-raised-button
+	      type="button" color="primary" (click)="done(false)">
+	Next please!
+      </button>
+      <button mat-raised-button
+	      type="button" color="primary" (click)="done(true)">
+	Done. Let's reveal!
+      </button>
+    </div>
   </div>
   <div class="palette">
     <div *ngFor="let color of ['gold', 'yellow', 'brown', 'magenta', 'pink', 'red']"

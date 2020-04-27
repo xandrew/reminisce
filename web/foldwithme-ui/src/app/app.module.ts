@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -44,6 +45,7 @@ import { PictureWithAuthorsComponent } from './picture-with-authors/picture-with
     MatInputModule,
     MatFormFieldModule,
     MatToolbarModule,
+    MatProgressSpinnerModule,
     HttpClientModule,
     AppRoutingModule,
     FoldUserModule

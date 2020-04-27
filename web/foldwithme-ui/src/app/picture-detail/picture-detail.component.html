@@ -1,12 +1,29 @@
 <div class="alldetail" *ngIf="display_data">
-  <app-picture-with-authors [display_data]="display_data">
-  </app-picture-with-authors>
+  <div class="wait">
+    <div class="mat-h3">Waiting for someone to continue this drawing... </div>
+    <mat-progress-spinner mode="indeterminate" diameter="20"></mat-progress-spinner>
+  </div>
+
+  <div class="mat-h3">You can also ...</div>
   <button color="accent" mat-raised-button [routerLink]="'/draw/'+id">
-    Continue
+    Continue it yourself
   </button>
   <button color="accent" mat-raised-button [routerLink]="'/reveal/'+id">
-    Reveal
+    Reveal the full image
   </button>
+  <div>
+    <div>
+      You can ask someone else to continue by sending them this URL:
+      <b>{{cont_url}}</b>
+    </div>
+    <button mat-raised-button
+	    (click)="link_to_clipboard()">
+      Add link to clipboard
+    </button>
+    <a mat-raised-button target="_blank" href="{{mailto}}">
+      Send link via email
+    </a>
+  </div>
   <div>Feature in galleries:</div>
   <div *ngFor="let gallery of galleries">
     <button *ngIf="gallery.has_picture" mat-stroked-button disabled="true">

@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { FoldUserModule } from '../fold-user/fold-user.module';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, filter } from 'rxjs/operators';
+import { timer } from 'rxjs/index';
+import { merge } from 'rxjs';
 
 @Component({
   selector: 'app-gallery',
@@ -28,7 +30,11 @@ export class GalleryComponent implements OnInit {
 
     routeObs.subscribe(code => this.code = code);
 
-    routeObs.pipe(
+    const pollTimer = timer(0, 5000).pipe(
+      filter(ev => this.code !== ''),
+      map(ev => this.code));
+
+    merge(routeObs, pollTimer).pipe(
       switchMap(id => this.http.get<object[]>('/gallery_contents?code=' + this.code))
     ).subscribe(data => {
       console.log(data);
@@ -37,5 +43,9 @@ export class GalleryComponent implements OnInit {
         entry.picture = this.sanitizer.bypassSecurityTrustUrl(entry.picture);
       }
     });
+  }
+
+  startDrawing() {
+    this.router.navigate(['draw', '-', {'gallery': this.code}]);
   }
 }

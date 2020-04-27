@@ -3,3 +3,19 @@
     flex-flow: column nowrap;
     align-items: center;
 }
+
+.wait {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-items: center;
+}
+
+.spinner {
+    height: 20px;
+    width: 20px;
+}
+
+.mat-h3 {
+    margin: 6px;
+}

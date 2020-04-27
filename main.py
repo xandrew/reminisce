@@ -169,9 +169,9 @@ def get_next_id():
 def link_ref(link_id):
     return db.collection('links').document(link_id)
 
-def add_chain_link(parent, image_url, user):
+def add_chain_link(parent, image_url, user, revealed):
     next_id = get_next_id()
-    link_ref(next_id).set({'parent': parent, 'image_url': image_url, 'user': user})
+    link_ref(next_id).set({'parent': parent, 'image_url': image_url, 'user': user, 'revealed': revealed})
     return next_id
 
 def get_chain_link(link_id):
@@ -237,15 +237,22 @@ def cropped_url(full_url):
     cropped = img.crop((0, 350, 400, 400))
     return image_to_url(cropped)
 
-def get_chain_display_data(user, last_id):
+def get_chain_display_data(last_id):
     chain = get_chain_link(last_id)
     image_url = chain['image_url']
-    if user == chain['user']:
-        picture = image_url
-    else:
-        picture = cropped_url(image_url)
+    picture = cropped_url(image_url)
     return {
-        'id': last_id, 'picture': picture, 'authors': get_author_list(last_id)}
+        'id': last_id,
+        'picture': picture,
+        'authors': get_author_list(last_id),
+        'revealed': chain.get('revealed', False)
+    }
+
+def get_continuations(picture_id):
+    res = [get_chain_display_data(d.id) for d
+           in db.collection('links').where('parent', '==', picture_id).stream()]
+    res.reverse()
+    return res
 
 # ============== Ajax endpoints =======================
 
@@ -258,7 +265,8 @@ def add_fregment():
         user = 'Anonymous'
 
     return json.dumps({
-        'id': add_chain_link(params['parent'], params['image_url'], user)
+        'id': add_chain_link(
+            params['parent'], params['image_url'], user, params['revealed'])
     })
 
 @app.route('/continue', methods=['GET'])
@@ -314,15 +322,14 @@ def user_galleries_req():
 def gallery_contents():
     code = request.args['code']
     user = current_user.get_id()
-    return json.dumps(
-        [get_chain_display_data(user, snapshot.id)
-         for snapshot in gallery_pictures_collection(code).stream()])
+    res = [get_chain_display_data(snapshot.id)
+           for snapshot in gallery_pictures_collection(code).stream()]
+    res.reverse()
+    return json.dumps(res)
 
 @app.route('/picture_data', methods=['GET'])
-@login_required
 def picture_data():
-    user = current_user.get_id()
-    return json.dumps(get_chain_display_data(user, request.args['id']))
+    return json.dumps(get_chain_display_data(request.args['id']))
 
 @app.route('/picture_galleries', methods=['GET'])
 @login_required
@@ -339,6 +346,10 @@ def picture_galleries():
 def add_picture_to_gallery_handler():
     add_picture_to_gallery(request.json['code'], request.json['picture_id'])
     return json.dumps({})
+
+@app.route('/get_continuations', methods=['GET'])
+def get_continuations_handler():
+    return json.dumps(get_continuations(request.args['id']))
 
 # Login state endpoint
 @app.route('/login_state', methods=['GET'])

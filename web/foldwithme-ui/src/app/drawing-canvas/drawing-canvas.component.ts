@@ -32,6 +32,7 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
   private parent = '';
   private prev_cropped: SafeUrl;
   private currentColor: string;
+  private gallery: string;
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -137,6 +138,7 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
 	}
         this.parent = params.get('parent');
         this.prev_cropped = undefined;
+	this.gallery = params.get('gallery');
 	if (this.parent === '-') {
 	  this.parent = '';
 	  return of(undefined);
@@ -147,25 +149,23 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
     ).subscribe(cropped_url => this.prev_cropped = cropped_url);
   }
 
-  post_image() {
+  post_image(reveal) {
     var image_url = this.canvas.nativeElement.toDataURL();
     return this.http.post(
         '/addFregment',
-        {'parent': this.parent, 'image_url': image_url});
+        {'parent': this.parent, 'image_url': image_url, 'revealed': reveal});
   }
 
-  continue() {
-    this.post_image().subscribe(resp =>
-      this.router.navigate(['draw', resp['id']]));
-  }
-
-  done() {
-    this.post_image().subscribe(resp =>
-      this.router.navigate(['picture', resp['id']]));
-  }
-
-  reveal() {
-    this.post_image().subscribe(resp =>
-      this.router.navigate(['reveal', resp['id']]));
+  done(reveal) {
+    this.post_image(reveal).subscribe(resp => {
+      if (reveal) {
+        console.log('revealing');
+        this.router.navigate(['reveal', resp['id'], {'gallery': this.gallery}]);
+      } else {
+        console.log('waiting');
+        this.router.navigate(
+	    ['picture', resp['id'], {'gallery': this.gallery}]);
+      }
+    });
   }
 }

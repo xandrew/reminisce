@@ -8,7 +8,6 @@
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
-    border: 2px solid #000;
     align-items: stretch;
     flex: 1 1 auto;
     max-width: 400px;
@@ -39,4 +38,14 @@ img {
     height: 30px;
     border-style: solid;
     border-width: 2px;
+}
+
+.buttons {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+}
+
+.buttons button {
+    margin: 3px;
 }
