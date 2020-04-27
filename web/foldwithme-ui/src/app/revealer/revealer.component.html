@@ -1,5 +1,11 @@
 <div class="fullPage">
+  <div class="mat-h2">Voila!</div>
   <div class="fullCanvas">
     <img *ngFor="let url of revealed" [src]="url">
+  </div>
+  <div class="buttons">
+    <button color='accent' mat-raised-button routerLink="/">
+      <mat-icon>home</mat-icon>
+    </button>
   </div>
 </div>

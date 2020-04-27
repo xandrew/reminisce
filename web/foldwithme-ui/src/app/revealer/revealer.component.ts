@@ -18,7 +18,8 @@ export class RevealerComponent implements OnInit {
       private router: Router) { }
 
   private revealed: SafeUrl[] = [];
-  private id: String;
+  private id: string;
+  private channel: string;
 
   ngOnInit() {
     this.route.paramMap.pipe(

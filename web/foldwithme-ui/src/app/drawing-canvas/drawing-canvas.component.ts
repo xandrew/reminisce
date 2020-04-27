@@ -153,18 +153,20 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
     var image_url = this.canvas.nativeElement.toDataURL();
     return this.http.post(
         '/addFregment',
-        {'parent': this.parent, 'image_url': image_url, 'revealed': reveal});
+        {'parent': this.parent, 'image_url': image_url, 'revealed': reveal, 'gallery': this.gallery || ''});
   }
 
   done(reveal) {
     this.post_image(reveal).subscribe(resp => {
+      const params = {}
+      if (this.gallery) {
+        params['gallery'] = this.gallery;
+      }
       if (reveal) {
-        console.log('revealing');
-        this.router.navigate(['reveal', resp['id'], {'gallery': this.gallery}]);
+        this.router.navigate(['reveal', resp['id'], params]);
       } else {
-        console.log('waiting');
         this.router.navigate(
-	    ['picture', resp['id'], {'gallery': this.gallery}]);
+	    ['picture', resp['id'], params]);
       }
     });
   }

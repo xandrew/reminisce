@@ -10,6 +10,7 @@ from io import BytesIO
 import base64
 from PIL import Image
 import random
+import timeago
 
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager
@@ -175,7 +176,10 @@ def add_chain_link(parent, image_url, user, revealed):
     return next_id
 
 def get_chain_link(link_id):
-    return link_ref(link_id).get().to_dict()
+    snapshot = link_ref(link_id).get()
+    res = snapshot.to_dict()
+    res['create_time'] = snapshot.create_time
+    return res
 
 def gallery_ref(code):
     return db.collection('galleries').document(code)
@@ -215,9 +219,12 @@ def new_gallery_code():
     return code
 
 def get_user_meta(user_id):
-    all_data = user_db_ref(user_id).get().to_dict()
-    return {'picture': all_data['picture'],
-            'given_name': all_data['given_name']}
+    if user_id != 'Anonymous':
+        all_data = user_db_ref(user_id).get().to_dict()
+        return {'picture': all_data['picture'],
+                'given_name': all_data['given_name']}
+    else:
+        return {'picture': '', 'given_name': 'Anonymous'}
 
 def get_author_list(last_id):
     if not last_id:
@@ -241,10 +248,12 @@ def get_chain_display_data(last_id):
     chain = get_chain_link(last_id)
     image_url = chain['image_url']
     picture = cropped_url(image_url)
+    create_time = chain['create_time'].ToDatetime()
     return {
         'id': last_id,
         'picture': picture,
         'authors': get_author_list(last_id),
+        'timeago': timeago.format(create_time, datetime.datetime.utcnow()),
         'revealed': chain.get('revealed', False)
     }
 
@@ -263,11 +272,12 @@ def add_fregment():
         user = current_user.get_id()
     else:
         user = 'Anonymous'
+    id = add_chain_link(
+        params['parent'], params['image_url'], user, params['revealed'])
+    if params['gallery']:
+        add_picture_to_gallery(params['gallery'], id)
+    return json.dumps({'id': id})
 
-    return json.dumps({
-        'id': add_chain_link(
-            params['parent'], params['image_url'], user, params['revealed'])
-    })
 
 @app.route('/continue', methods=['GET'])
 def cont():

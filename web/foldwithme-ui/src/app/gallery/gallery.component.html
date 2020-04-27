@@ -1,10 +1,14 @@
-<div class="mat-h1">Gallery!</div>
-<div>Code for this gallary is: <b>{{code}}</b></div>
-<button mat-raised-button
-	type="button" color="primary" (click)="startDrawing()">
-  Draw something here!
-</button>
-<app-picture-with-authors
-  *ngFor="let picture of pictures"
-  [display_data]="picture">
-</app-picture-with-authors>
+<div class="full-gallery">
+  <div class="mat-h1">Gallery!</div>
+  <div>The code for joining this gallary is: <b>{{code}}</b></div>
+  <button mat-raised-button
+	  type="button" color="primary" (click)="startDrawing()">
+    Draw something new here!
+  </button>
+  <div *ngIf="pictures.length === 0" class="mat-h2">No drawings yet...</div>
+  <div *ngIf="pictures.length" class="mat-h2">Earlier art</div>
+  <app-picture-with-authors
+    *ngFor="let picture of pictures"
+    [display_data]="picture">
+  </app-picture-with-authors>
+</div>

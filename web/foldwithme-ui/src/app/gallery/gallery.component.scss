@@ -1,0 +1,14 @@
+.full-gallery {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+button {
+    margin: 3px;
+}
+
+.mat-h2 {
+    margin-top: 9px;
+}

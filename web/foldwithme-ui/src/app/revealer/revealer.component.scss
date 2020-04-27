@@ -1,10 +1,14 @@
 .fullPage {
     display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: flex-start;
 }
 .fullCanvas {
     display: flex;
     flex-flow: column nowrap;
-    border: 2px solid #000;
+    background: white;
+}
+button {
+    margin: 3px;
 }

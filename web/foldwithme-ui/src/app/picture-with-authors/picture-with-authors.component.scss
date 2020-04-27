@@ -1,27 +1,53 @@
 .profile {
     width: 40px;
     height: 40px;
-    border-bottom: 2px solid #fff;
 }
-.lastprofile {
+.author {
     width: 40px;
     height: 40px;
-    border-left: 2px solid #fff;
-    border-top: 2px solid #fff;
-}
-
-.emptydiv {
-    border-left: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    height: 40px;
-    flex: 1 0 auto;
-}
-
-.panda {
-    border: 2px solid #fff;
 }
 
 .authors {
     display: flex;
     flex-flow: row nowrap;
+    margin: 3px;
+}
+
+.fullCanvas {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex: 1 1 auto;
+    max-width: 400px;
+    background: white;
+    border-color: black;
+    margin: 5px;
+}
+
+.question {
+    color: black;
+    font-size: xxx-large;
+    text-align: center;
+}
+
+mat-card {
+    margin: 6px;
+}
+mat-card-content {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+mat-card-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.mat-h2 {
+    margin: 3px;
 }
