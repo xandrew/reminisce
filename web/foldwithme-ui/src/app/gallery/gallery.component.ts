@@ -5,7 +5,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { FoldUserModule } from '../fold-user/fold-user.module';
 import { map, switchMap, filter } from 'rxjs/operators';
 import { timer } from 'rxjs/index';
-import { merge } from 'rxjs';
+import { merge, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-gallery',

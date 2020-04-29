@@ -263,6 +263,12 @@ def get_continuations(picture_id):
     res.reverse()
     return res
 
+def get_user_pictures(user_id):
+    res = [get_chain_display_data(d.id) for d
+           in db.collection('links').where('user', '==', user_id).stream()]
+    res.reverse()
+    return res
+
 # ============== Ajax endpoints =======================
 
 @app.route('/addFregment', methods=['POST'])
@@ -360,6 +366,10 @@ def add_picture_to_gallery_handler():
 @app.route('/get_continuations', methods=['GET'])
 def get_continuations_handler():
     return json.dumps(get_continuations(request.args['id']))
+
+@app.route('/get_user_pictures', methods=['GET'])
+def get_user_pictures_handler():
+    return json.dumps(get_user_pictures(current_user.get_id()))
 
 # Login state endpoint
 @app.route('/login_state', methods=['GET'])

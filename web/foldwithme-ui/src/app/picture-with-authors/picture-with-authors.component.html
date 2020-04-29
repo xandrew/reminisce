@@ -11,7 +11,13 @@
   </mat-card-header>
   <mat-card-content>
     <div class="fullCanvas">
-      <div class="question">?</div>
+      <div class="questions">
+	<span
+	  *ngFor="let author of display_data.authors"
+	  class="question">
+	  ?
+	</span>
+      </div>
       <img [src]="display_data.picture" class="picture">
     </div>
     <div *ngIf="display_data.authors.length > 1">

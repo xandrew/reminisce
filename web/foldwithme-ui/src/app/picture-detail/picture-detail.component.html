@@ -18,10 +18,13 @@
     Send link via email
   </a>
   <div class="mat-h2">Bored of waiting?</div>
-  <button color="primary" mat-raised-button [routerLink]="'/reveal/'+id">
+  <a color="accent" mat-raised-button [routerLink]="'/reveal/'+id">
     Reveal the full image
-  </button>
-  <button color='accent' mat-raised-button routerLink="/">
+  </a>
+  <a color='primary' mat-raised-button [routerLink]="['/gallery', gallery]">
+    Return to the gallery
+  </a>
+  <button mat-raised-button routerLink="/">
     <mat-icon>home</mat-icon>
   </button>
   <div *ngIf="fold_user.email">

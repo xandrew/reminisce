@@ -8,6 +8,7 @@ import { GalleryComponent } from './gallery/gallery.component';
 import { NewGalleryComponent } from './new-gallery/new-gallery.component';
 import { JoinGalleryComponent } from './join-gallery/join-gallery.component';
 import { PictureDetailComponent } from './picture-detail/picture-detail.component';
+import { UserPicturesComponent } from './user-pictures/user-pictures.component';
 
 const routes: Routes = [
   { path: 'draw/:parent', component: DrawingCanvasComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'join_gallery', component: JoinGalleryComponent },
   { path: 'gallery/:code', component: GalleryComponent },
   { path: 'picture/:id', component: PictureDetailComponent },
+  { path: 'mine', component: UserPicturesComponent },
   { path: '', component: MainMenuComponent, pathMatch: 'full' }
 ];
 

@@ -30,25 +30,36 @@ export class PictureDetailComponent implements OnInit, OnDestroy {
   galleryReloadSubject = new Subject<string>();
   cont_url = '';
   mailto = '';
+  gallery = '';
 
   private subs: Subscription[] = [];
 
-  ngOnInit() {
-    const routeObs = this.route.paramMap.pipe(
-      map((params: ParamMap) => params.get('id')));
+  routeArrayFor(operation, id) {
+    const res = [operation, id];
+    if (this.gallery) {
+      res.push({'gallery': this.gallery});
+    }
+    return res;
+  }
 
-    this.subs.push(routeObs.subscribe(id => {
-      this.id = id;
+  ngOnInit() {
+    this.subs.push(this.route.paramMap.subscribe((params: ParamMap) => {
+      this.id = params.get('id');
+      this.gallery = params.get('gallery');
       this.cont_url = (
           location.origin +
 	  '/' +
 	  this.location.prepareExternalUrl(
-              this.router.createUrlTree(['draw', this.id]).toString()));
+              this.router.createUrlTree(
+	          this.routeArrayFor('draw', this.id)).toString()));
       this.mailto = encodeURI(
           'mailto:?subject=Continue my drawing!&body=Just follow this URL:\n' +
 	  this.cont_url);
     }));
     
+    const routeObs = this.route.paramMap.pipe(
+      map((params: ParamMap) => params.get('id')));
+
     this.subs.push(routeObs.pipe(
       switchMap(id => this.http.get('/picture_data?id=' + this.id))
     ).subscribe(data => {
@@ -68,9 +79,9 @@ export class PictureDetailComponent implements OnInit, OnDestroy {
       map(data => data[0]),
       take(1)).subscribe(entry => {
         if (entry['revealed']) {
-          this.router.navigate(['reveal', entry['id']]);
+          this.router.navigate(this.routeArrayFor('reveal', entry['id']));
 	} else {
-          this.router.navigate(['draw', entry['id']]);
+          this.router.navigate(this.routeArrayFor('draw', entry['id']));
 	}
       }));
 

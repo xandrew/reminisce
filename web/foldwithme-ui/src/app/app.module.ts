@@ -24,6 +24,7 @@ import { JoinGalleryComponent } from './join-gallery/join-gallery.component';
 import { GalleryComponent } from './gallery/gallery.component';
 import { PictureDetailComponent } from './picture-detail/picture-detail.component';
 import { PictureWithAuthorsComponent } from './picture-with-authors/picture-with-authors.component';
+import { UserPicturesComponent } from './user-pictures/user-pictures.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { PictureWithAuthorsComponent } from './picture-with-authors/picture-with
     JoinGalleryComponent,
     GalleryComponent,
     PictureDetailComponent,
-    PictureWithAuthorsComponent
+    PictureWithAuthorsComponent,
+    UserPicturesComponent
   ],
   imports: [
     BrowserModule,
