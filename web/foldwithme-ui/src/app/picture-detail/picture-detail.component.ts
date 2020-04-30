@@ -73,6 +73,7 @@ export class PictureDetailComponent implements OnInit, OnDestroy {
       map(ev => this.id));
 
     this.subs.push(merge(routeObs, pollTimer).pipe(
+      take(2000),
       switchMap(id => this.http.get<object[]>(
           '/get_continuations?id=' + this.id)),
       filter(data => data.length > 0),

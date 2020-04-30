@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { FoldUserModule } from '../fold-user/fold-user.module';
-import { map, switchMap, filter } from 'rxjs/operators';
+import { map, switchMap, filter, take } from 'rxjs/operators';
 import { timer } from 'rxjs/index';
 import { merge, Subscription } from 'rxjs';
 
@@ -31,9 +31,10 @@ export class GalleryComponent implements OnInit, OnDestroy {
 
     this.subs.push(routeObs.subscribe(code => this.code = code));
 
-    const pollTimer = timer(0, 500000).pipe(
+    const pollTimer = timer(0, 5000).pipe(
       filter(ev => this.code !== ''),
-      map(ev => this.code));
+      map(ev => this.code),
+      take(100));
 
     this.subs.push(merge(routeObs, pollTimer).pipe(
       switchMap(id => this.http.get<object[]>('/gallery_contents?code=' + this.code))
