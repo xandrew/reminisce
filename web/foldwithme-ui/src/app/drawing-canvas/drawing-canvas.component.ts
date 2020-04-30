@@ -31,7 +31,7 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
   private cx: CanvasRenderingContext2D;
   private parent = '';
   private prev_cropped: SafeUrl;
-  private currentColor: string;
+  private currentColor = 'black';
   private gallery: string;
 
   public ngAfterViewInit() {
