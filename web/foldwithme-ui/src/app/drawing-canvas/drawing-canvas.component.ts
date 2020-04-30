@@ -4,8 +4,8 @@
  */
 
 import { Component, Input, ElementRef, AfterViewInit, OnInit, ViewChild } from '@angular/core';
-import { of, fromEvent } from 'rxjs';
-import { map, switchMap, takeUntil, pairwise } from 'rxjs/operators';
+import { of, fromEvent, merge } from 'rxjs';
+import { map, switchMap, takeUntil, pairwise, filter } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -49,7 +49,9 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
   }
   
   private captureEvents(canvasEl: HTMLCanvasElement) {
-    fromEvent(canvasEl, 'mousedown')
+    const enterWithButtonPressed = fromEvent(canvasEl, 'mouseenter').pipe(
+      filter((e: MouseEvent) => (e.buttons & 1) !== 0));
+    merge(fromEvent(canvasEl, 'mousedown'), enterWithButtonPressed)
     .pipe(
       switchMap((e) => {
         return fromEvent(canvasEl, 'mousemove')
