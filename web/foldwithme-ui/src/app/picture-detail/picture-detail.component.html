@@ -21,7 +21,8 @@
   <a color="accent" mat-raised-button [routerLink]="'/reveal/'+id">
     Reveal the full image
   </a>
-  <a color='primary' mat-raised-button [routerLink]="['/gallery', gallery]">
+  <a *ngIf="gallery" color='primary' mat-raised-button
+     [routerLink]="['/gallery', gallery]">
     Return to the gallery
   </a>
   <button mat-raised-button routerLink="/">
