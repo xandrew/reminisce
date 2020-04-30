@@ -172,7 +172,12 @@ def link_ref(link_id):
 
 def add_chain_link(parent, image_url, user, revealed):
     next_id = get_next_id()
-    link_ref(next_id).set({'parent': parent, 'image_url': image_url, 'user': user, 'revealed': revealed})
+    link_ref(next_id).set({
+        'picture_id': next_id,
+        'parent': parent,
+        'image_url': image_url,
+        'user': user,
+        'revealed': revealed})
     return next_id
 
 def get_chain_link(link_id):
@@ -263,10 +268,17 @@ def get_continuations(picture_id):
     res.reverse()
     return res
 
+# for link in db.collection('links').stream():
+#     picture_id = link.id
+#     db.collection('links').document(picture_id).update({'picture_id': picture_id})
+
 def get_user_pictures(user_id):
-    res = [get_chain_display_data(d.id) for d
-           in db.collection('links').where('user', '==', user_id).stream()]
-    res.reverse()
+    query = (db
+        .collection('links')
+        .where('user', '==', user_id)
+        .order_by('picture_id', direction='DESCENDING')
+        .limit(10))
+    res = [get_chain_display_data(d.id) for d in query.stream()]
     return res
 
 # ============== Ajax endpoints =======================
