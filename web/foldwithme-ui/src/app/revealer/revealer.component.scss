@@ -7,8 +7,16 @@
 .fullCanvas {
     display: flex;
     flex-flow: column nowrap;
+    align-items: stretch;
     background: white;
 }
+
+img {
+    user-select: none;
+    max-width: 100%;
+    flex: 1 1 auto;
+}
+
 button {
     margin: 3px;
 }
