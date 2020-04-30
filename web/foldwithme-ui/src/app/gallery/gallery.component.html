@@ -1,5 +1,13 @@
 <div class="full-gallery">
-  <div class="mat-h1">Gallery!</div>
+  <div class="header">
+    <button color='accent' mat-raised-button class="home" routerLink="/">
+      <mat-icon>home</mat-icon>
+    </button>
+    <div class="mat-h1">Gallery {{title}}!</div>
+    <button color='accent' mat-raised-button class="home" routerLink="/">
+      <mat-icon>home</mat-icon>
+    </button>
+  </div>
   <div>The code for joining this gallary is: <b>{{code}}</b></div>
   <button mat-raised-button
 	  type="button" color="primary" (click)="startDrawing()">

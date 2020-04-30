@@ -17,7 +17,7 @@ export class FoldUserModule {
 
   load_galleries() {
     this.http.get<object[]>('/user_galleries').subscribe(
-	resp => {this.galleries = resp; console.log(this.galleries)});
+        resp => this.galleries = resp);
   }
 
   constructor(private http: HttpClient, private sanitizer: DomSanitizer) {
@@ -39,5 +39,14 @@ export class FoldUserModule {
   join_gallery(code) {
     this.http.post('/join_gallery', {'code': code}).subscribe(
         resp => this.load_galleries());
+  }
+
+  get_title(code) {
+    for (var gallery of this.galleries) {
+      if (gallery['code'] === code) {
+        return gallery['title'];
+      }
+    }
+    return '';
   }
 }
