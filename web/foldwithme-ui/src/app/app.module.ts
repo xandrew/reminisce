@@ -25,6 +25,7 @@ import { GalleryComponent } from './gallery/gallery.component';
 import { PictureDetailComponent } from './picture-detail/picture-detail.component';
 import { PictureWithAuthorsComponent } from './picture-with-authors/picture-with-authors.component';
 import { UserPicturesComponent } from './user-pictures/user-pictures.component';
+import { PictureListComponent } from './picture-list/picture-list.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { UserPicturesComponent } from './user-pictures/user-pictures.component';
     GalleryComponent,
     PictureDetailComponent,
     PictureWithAuthorsComponent,
-    UserPicturesComponent
+    UserPicturesComponent,
+    PictureListComponent
   ],
   imports: [
     BrowserModule,

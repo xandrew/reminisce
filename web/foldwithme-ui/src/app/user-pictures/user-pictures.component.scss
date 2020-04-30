@@ -1,10 +1,21 @@
-.full-gallery {
+.full-page {
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: center;
 }
+.header {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
 
-.mat-h2 {
-    margin-top: 9px;
+.mat-h1 {
+    margin: 6px;
+}
+
+.home {
+    margin: 3px;
 }

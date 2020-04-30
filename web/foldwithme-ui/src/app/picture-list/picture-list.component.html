@@ -1,0 +1,13 @@
+<div class="full-gallery">
+  <button *ngIf="refreshesLeft <= 0"
+	  mat-raised-button
+	  (click)="restartRefreshing()">
+    Look for new pictures... <mat-icon>autorenew</mat-icon>
+  </button>
+  <div *ngIf="pictures.length === 0" class="mat-h2">No drawings found...</div>
+  <app-picture-with-authors
+    *ngFor="let picture of pictures"
+    [display_data]="picture">
+  </app-picture-with-authors>
+</div>
+
