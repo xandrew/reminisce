@@ -5,11 +5,6 @@
 	  type="button" color="primary" (click)="startDrawing()">
     Draw something new here!
   </button>
-  <div *ngIf="pictures.length === 0" class="mat-h2">No drawings yet...</div>
-  <div *ngIf="pictures.length" class="mat-h2">Earlier art</div>
-  <app-picture-with-authors
-    *ngFor="let picture of pictures"
-    [display_data]="picture"
-    [gallery]="code">
-  </app-picture-with-authors>
+  <app-picture-list [requestURL]="'/gallery_contents?code=' + code">
+  </app-picture-list>
 </div>
