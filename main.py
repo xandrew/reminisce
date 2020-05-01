@@ -243,10 +243,25 @@ def image_to_url(img):
     data64 = base64.b64encode(data.getvalue())
     return u'data:img/png;base64,'+data64.decode('utf-8')
 
-def cropped_url(full_url):
-    resp = urlopen(full_url)
+def url_to_image(url):
+    resp = urlopen(url)
     img = Image.open(resp.fp)
-    cropped = img.crop((0, 350, 400, 400))
+    img.load()
+    return img
+
+def crop_to_drawing(img):
+    bb = img.getbbox()
+    bottom = 50
+    if bb and bb[3] > 50:
+        bottom = bb[3]
+    return img.crop((0, 0, 400, bottom))
+
+def cropped_url(full_url):
+    img = url_to_image(full_url)
+    top_row = img.height - 50
+    if top_row < 0:
+        top_row = 0
+    cropped = img.crop((0, top_row, 400, img.height))
     return image_to_url(cropped)
 
 def get_chain_display_data(last_id):
@@ -290,8 +305,10 @@ def add_fregment():
         user = current_user.get_id()
     else:
         user = 'Anonymous'
+    cropped_url = image_to_url(crop_to_drawing(url_to_image(
+        params['image_url'])))
     id = add_chain_link(
-        params['parent'], params['image_url'], user, params['revealed'])
+        params['parent'], cropped_url, user, params['revealed'])
     if params['gallery']:
         add_picture_to_gallery(params['gallery'], id)
     return json.dumps({'id': id})
