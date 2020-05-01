@@ -250,6 +250,17 @@ def url_to_image(url):
     return img
 
 def crop_to_drawing(img):
+    datas = img.getdata()
+
+    # Removing white pictures.
+    newData = []
+    for item in datas:
+        if item[0] == 255 and item[1] == 255 and item[2] == 255:
+            newData.append((0, 0, 0, 0))
+        else:
+            newData.append(item)
+    img.putdata(newData)
+
     bb = img.getbbox()
     bottom = 50
     if bb and bb[3] > 50:

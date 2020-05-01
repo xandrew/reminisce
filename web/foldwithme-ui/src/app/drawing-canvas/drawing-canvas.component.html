@@ -1,14 +1,21 @@
 <div class="fullPage">
   <div class="palette">
-    <div *ngFor="let color of ['black', 'grey', 'purple', 'blue', 'aquamarine', 'green']"
+    <div *ngFor="let color of ['black', 'grey', 'darkblue', 'blue', 'aquamarine', 'green']"
 	 class="colorselector"
 	 [ngStyle]="{'background': color, 'border-color': ((currentColor === color) ? 'white' : 'transparent')}"
 	 (click)="setColor(color)">
     </div>
+    <div class="colorselector ereaser"
+	 [ngStyle]="{'background': 'grey', 'border-color': ((currentColor === 'ereaser') ? 'white' : 'transparent')}"
+	 (click)="setEreaser()"><mat-icon>filter_tilt_shift</mat-icon>
+    </div>
   </div>
   <div class="fullCanvas">
     <img *ngIf="prev_cropped" [src]="prev_cropped" draggable="false">
-    <canvas #canvas></canvas>
+    <canvas
+      #canvas
+      [style.cursor]="(currentColor === 'ereaser') ? 'not-allowed' : 'crosshair'">
+    </canvas>
     <div class="buttons">
       <button mat-raised-button
 	      type="button" color="primary" (click)="done(false)">
@@ -21,7 +28,7 @@
     </div>
   </div>
   <div class="palette">
-    <div *ngFor="let color of ['gold', 'yellow', 'brown', 'magenta', 'pink', 'red']"
+    <div *ngFor="let color of ['gold', 'yellow', 'brown', 'magenta', 'pink', 'purple', 'red']"
 	 class="colorselector"
 	 [ngStyle]="{'background': color, 'border-color': ((currentColor === color) ? 'white' : 'transparent')}"
 	 (click)="setColor(color)">

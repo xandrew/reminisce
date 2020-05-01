@@ -124,7 +124,14 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
 
   setColor(color) {
     this.cx.strokeStyle = color;
+    this.cx.lineWidth = 3;
     this.currentColor = color;
+  }
+
+  setEreaser() {
+    this.cx.strokeStyle = 'white';
+    this.cx.lineWidth = 18;
+    this.currentColor = 'ereaser';
   }
 
   cropped_url_for_parent(parent) {
