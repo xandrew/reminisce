@@ -21,14 +21,14 @@
   <a color="accent" mat-raised-button [routerLink]="'/reveal/'+id">
     Reveal the full image
   </a>
-  <!-- <a *ngIf="gallery" color='primary' mat-raised-button
+  <a *ngIf="gallery" color='primary' mat-raised-button
      [routerLink]="['/gallery', gallery]">
     Return to the gallery
   </a>
   <button mat-raised-button routerLink="/">
     <mat-icon>home</mat-icon>
   </button>
-  <div *ngIf="fold_user.email">
+  <!-- <div *ngIf="fold_user.email">
     <div class="mat-h2">Feature in galleries:</div>
     <div *ngFor="let gallery of galleries">
       <button *ngIf="gallery.has_picture" mat-stroked-button disabled="true">
