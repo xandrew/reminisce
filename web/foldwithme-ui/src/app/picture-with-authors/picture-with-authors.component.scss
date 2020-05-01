@@ -19,10 +19,16 @@
     justify-content: flex-start;
     align-items: stretch;
     flex: 1 1 auto;
-    max-width: 400px;
+    max-width: 100%;
     background: white;
     border-color: black;
     margin: 5px;
+}
+
+.fullCanvas img {
+    user-select: none;
+    max-width: 100%;
+    flex: 1 1 auto;
 }
 
 .question {
@@ -52,4 +58,9 @@ mat-card-header {
 
 .mat-h2 {
     margin: 3px;
+}
+
+:host {
+    flex: 1 1 auto;
+    max-width: 100%;
 }

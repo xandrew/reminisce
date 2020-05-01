@@ -16,7 +16,7 @@
     align-items: center;
 }
 
-.mat-card {
-    max-width: 100%;
+:host {
     flex: 1 1 auto;
+    max-width: 100%;
 }
