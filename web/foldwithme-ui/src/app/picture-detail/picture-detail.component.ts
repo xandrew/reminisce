@@ -86,6 +86,7 @@ export class PictureDetailComponent implements OnInit, OnDestroy {
 	}
       }));
 
+    /* No gallery selection for now.
     const idObs = merge(routeObs, this.galleryReloadSubject);
     this.subs.push(idObs.pipe(
       filter(id => {console.log(this.fold_user.email); return (this.fold_user.email !== '')}),
@@ -94,7 +95,7 @@ export class PictureDetailComponent implements OnInit, OnDestroy {
     ).subscribe(data => {
       console.log(this.galleries);
       this.galleries = data;
-    }));
+    }));*/
   }
 
   ngOnDestroy() {
