@@ -378,9 +378,10 @@ def user_galleries_req():
 def gallery_contents():
     code = request.args['code']
     user = current_user.get_id()
+    pictures = list(gallery_pictures_collection(code).stream())
+    pictures.reverse()
     res = [get_chain_display_data(snapshot.id)
-           for snapshot in gallery_pictures_collection(code).stream()]
-    res.reverse()
+           for snapshot in pictures[:20]]
     return json.dumps(res)
 
 @app.route('/picture_data', methods=['GET'])

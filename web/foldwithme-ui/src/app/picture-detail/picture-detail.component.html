@@ -1,9 +1,10 @@
-<div class="alldetail" *ngIf="display_data">
-  <div class="wait">
-    <div class="mat-h2">Waiting for someone to continue this drawing... </div>
-    <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
-  </div>
-
+<div class="alldetail">
+  <div class="mat-h2">Waiting for others to continue this drawing... </div>
+  <app-picture-list
+    *ngIf="id"
+    [gallery]="gallery"
+    [requestURL]="'/get_continuations?id=' + id">
+  </app-picture-list>
   <div>
     Anyone can continue via this url:
   </div>

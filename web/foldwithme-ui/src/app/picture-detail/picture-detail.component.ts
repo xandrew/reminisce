@@ -26,7 +26,6 @@ export class PictureDetailComponent implements OnInit, OnDestroy {
 
   id = '';
   galleries = [];
-  display_data = undefined;
   galleryReloadSubject = new Subject<string>();
   cont_url = '';
   mailto = '';
@@ -59,32 +58,6 @@ export class PictureDetailComponent implements OnInit, OnDestroy {
     
     const routeObs = this.route.paramMap.pipe(
       map((params: ParamMap) => params.get('id')));
-
-    this.subs.push(routeObs.pipe(
-      switchMap(id => this.http.get('/picture_data?id=' + this.id))
-    ).subscribe(data => {
-      this.display_data = data;
-      this.display_data.picture = this.sanitizer.bypassSecurityTrustUrl(
-          this.display_data.picture);
-    }));
-
-    const pollTimer = timer(0, 1000).pipe(
-      filter(ev => this.id !== ''),
-      map(ev => this.id));
-
-    this.subs.push(merge(routeObs, pollTimer).pipe(
-      take(2000),
-      switchMap(id => this.http.get<object[]>(
-          '/get_continuations?id=' + this.id)),
-      filter(data => data.length > 0),
-      map(data => data[0]),
-      take(1)).subscribe(entry => {
-        if (entry['revealed']) {
-          this.router.navigate(this.routeArrayFor('reveal', entry['id']));
-	} else {
-          this.router.navigate(this.routeArrayFor('draw', entry['id']));
-	}
-      }));
 
     /* No gallery selection for now.
     const idObs = merge(routeObs, this.galleryReloadSubject);
