@@ -12,7 +12,8 @@
   <div *ngIf="pictures.length === 0" class="mat-h2">No drawings found...</div>
   <app-picture-with-authors
     *ngFor="let picture of pictures"
-    [display_data]="picture">
+    [display_data]="picture"
+    [gallery]="gallery">
   </app-picture-with-authors>
 </div>
 

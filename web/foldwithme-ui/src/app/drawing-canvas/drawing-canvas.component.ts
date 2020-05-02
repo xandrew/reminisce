@@ -6,6 +6,7 @@
 import { Component, Input, ElementRef, AfterViewInit, OnInit, ViewChild } from '@angular/core';
 import { of, fromEvent, merge } from 'rxjs';
 import { map, switchMap, takeUntil, pairwise, filter } from 'rxjs/operators';
+import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -21,7 +22,8 @@ export class DrawingCanvasComponent implements AfterViewInit, OnInit {
       private http: HttpClient,
       private sanitizer: DomSanitizer,
       private route: ActivatedRoute,
-      private router: Router) { }
+      private router: Router,
+      private location: Location) { }
 
   @ViewChild('canvas', {static: false}) public canvas: ElementRef;
 

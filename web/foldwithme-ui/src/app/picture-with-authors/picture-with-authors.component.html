@@ -30,7 +30,7 @@
     </div>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button [routerLink]="['/draw', display_data['id'], {'gallery': gallery}]">Continue</button>
-    <button mat-button [routerLink]="['/reveal', display_data['id'], {'gallery': gallery}]">Reveal</button>
+    <button mat-button [routerLink]="routeArrayFor('/draw')">Continue</button>
+    <button mat-button [routerLink]="routeArrayFor('/reveal')">Reveal</button>
   </mat-card-actions>
 </mat-card>

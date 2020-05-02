@@ -19,7 +19,7 @@ export class RevealerComponent implements OnInit {
 
   private revealed: SafeUrl[] = [];
   private id: string;
-  private channel: string;
+  private gallery: string;
 
   ngOnInit() {
     this.route.paramMap.pipe(
@@ -34,5 +34,7 @@ export class RevealerComponent implements OnInit {
           this.revealed.push(this.sanitizer.bypassSecurityTrustUrl(url));
         }
       })
+    this.route.paramMap.subscribe(
+        (params: ParamMap) => this.gallery = params.get('gallery'));
   }
 }

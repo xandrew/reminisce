@@ -15,6 +15,15 @@ export class PictureWithAuthorsComponent implements OnInit {
   ngOnInit() {
   }
 
+  routeArrayFor(operation) {
+    const res = [operation, this.display_data['id']];
+    if (this.gallery) {
+      res.push({'gallery': this.gallery});
+    }
+    return res;
+  }
+
+
   onClick() {
     this.router.navigate(['picture', this.display_data['id']]);
   }

@@ -7,5 +7,9 @@
     <button color='accent' mat-raised-button routerLink="/">
       <mat-icon>home</mat-icon>
     </button>
+    <button *ngIf="gallery" color='primary' mat-raised-button
+	    [routerLink]="['/gallery', gallery]">
+      Return to the gallery
+    </button>
   </div>
 </div>

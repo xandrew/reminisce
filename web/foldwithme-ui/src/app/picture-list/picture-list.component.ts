@@ -25,8 +25,9 @@ export class PictureListComponent implements OnInit {
     return this.requestURLSubject.getValue();
   }
 
+  @Input() gallery = '';
   @Input() refreshInterval = 5000;
-  @Input() refreshCount = 3;
+  @Input() refreshCount = 100;
  
   private requestURLSubject = new BehaviorSubject<string>(undefined);
 
@@ -55,9 +56,10 @@ export class PictureListComponent implements OnInit {
             map(idx => url),
 	    filter(url => this.canRefresh()));
       }),
-      switchMap(url => this.http.get<object[]>(url)));
+      switchMap(url => {console.log(url); return this.http.get<object[]>(url)}));
 
     this.subs.push(requestObs.subscribe(data => {
+        console.log(data);
         this.pictures = data;
         for (var entry of this.pictures) {
           entry.picture = this.sanitizer.bypassSecurityTrustUrl(entry.picture);
