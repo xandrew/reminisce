@@ -20,11 +20,18 @@ canvas {
     max-width: 100%;
 }
 
+canvas.ereaser {
+    cursor: url('/ui/assets/filter_tilt_shift-24px.svg') 12 12, auto;
+}
+canvas.normal {
+    cursor: crosshair;
+}
+
 .palette div {
     margin: 6px;
 }
 
-img {
+.fullCanvas img {
     user-select: none;
     -webkit-user-drag: none;
     background: lightgrey;

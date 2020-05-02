@@ -7,14 +7,15 @@
     </div>
     <div class="colorselector ereaser"
 	 [ngStyle]="{'background': 'grey', 'border-color': ((currentColor === 'ereaser') ? 'white' : 'transparent')}"
-	 (click)="setEreaser()"><mat-icon>filter_tilt_shift</mat-icon>
+	 (click)="setEreaser()">
+      <mat-icon>filter_tilt_shift</mat-icon>
     </div>
   </div>
   <div class="fullCanvas">
     <img *ngIf="prev_cropped" [src]="prev_cropped" draggable="false">
     <canvas
       #canvas
-      [style.cursor]="(currentColor === 'ereaser') ? 'not-allowed' : 'crosshair'">
+      [class]="(currentColor === 'ereaser') ? 'ereaser' : 'normal'">
     </canvas>
     <div class="buttons">
       <button mat-raised-button
