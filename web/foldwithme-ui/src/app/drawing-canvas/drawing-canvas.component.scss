@@ -7,10 +7,7 @@
 .fullCanvas {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex-start;
     align-items: stretch;
-    flex: 1 1 auto;
-    max-width: 400px;
 }
 
 canvas {
@@ -33,7 +30,6 @@ canvas.normal {
 
 .fullCanvas img {
     user-select: none;
-    -webkit-user-drag: none;
     background: lightgrey;
     max-width: 100%;
     flex: 1 1 auto;
